@@ -3,36 +3,16 @@ import CounterButton from "../components/CounterButton";
 
 const User: React.FC = () => {
     return (
-       <body className="flex items-center justify-center min-h-screen bg-[#525252] ">
-            
-            <div className="card glass bg-gradient-to-b from-[#FF6422] to-[#99147C] w-500 h-full shadow-xl border-4 border-white">
-                <div className="card-body grid grid-cols-2 gap-4">
-                
-                    <div className="bg-gray-200 p-4 rounded-lg shadow">
-                    <h3 className="font-bold text-lg">Section 1</h3>
-                    <p>Data or content for section 1</p>
-                    </div>
-
-
-                    <div className="bg-gray-200 p-4 rounded-lg shadow">
-                    <h3 className="font-bold text-lg">Section 2</h3>
-                    <p>Data or content for section 2</p>
-                    </div>
-
-                
-                    <div className="bg-gray-200 p-4 rounded-lg shadow">
-                    <h3 className="font-bold text-lg">Section 3</h3>
-                    <p>Data or content for section 3</p>
-                    </div>
-
-
-                    <div className="bg-gray-200 p-4 rounded-lg shadow">
-                    <h3 className="font-bold text-lg">Section 4</h3>
-                    <p>Data or content for section 4</p>
-                    </div>
-                    <div className="card-actions justify-center"><CounterButton /></div>
+       <body className="flex items-center justify-center min-h-screen bg-white] ">
+        <div className="card glass bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] w-96 shadow-xl">
+            <div className="card-body items-center text-center">
+                <h1 className="card-title font-neue font-bold text-7xl text-white">Total</h1>
+                <h1 className="card-title font-neue font-bold text-9xl text-white">0</h1>
+                <div className="card-actions">
+                <button className="btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">+1</button>
                 </div>
             </div>
+        </div>
 
 
       </body>
