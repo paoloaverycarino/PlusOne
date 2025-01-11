@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useUser } from "../contexts/UserContext"; // Import the context
 
@@ -21,13 +21,7 @@ const CounterButton: React.FC = () => {
 
       if (docSnap.exists()) {
         setCounter(docSnap.data().counter); // Set the counter state with the value from Firestore
-      } else {
-        // If document doesn't exist, create it with an initial counter value of 0
-        await setDoc(counterRef, { counter: 0 });
-        setCounter(0); // Initialize local state
       }
-    } else {
-      console.log("No username found. Please log in first.");
     }
   };
 
@@ -40,14 +34,9 @@ const CounterButton: React.FC = () => {
       if (docSnap.exists()) {
         // If the document exists, update the counter
         await updateDoc(counterRef, { counter: counter + 1 });
-      } else {
-        // If the document doesn't exist, create it with the initial counter value
-        await setDoc(counterRef, { counter: counter + 1 });
-      }
+      } 
       setCounter(counter + 1); // Update local state to reflect new counter
-    } else {
-      console.log("No username found. Please log in first.");
-    }
+    } 
   };
 
   return (
@@ -61,4 +50,3 @@ const CounterButton: React.FC = () => {
 };
 
 export default CounterButton;
-
