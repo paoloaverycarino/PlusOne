@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
 
 
-        <div className="card bg-base-100 w-96 shadow-xl">
+        <div className="card bg-gradient-to-r from-blue-500 to-purple-600 w-96 shadow-xl">
 
             <div className="card-body">
                 <h2 className="card-title">Shoes!</h2>
