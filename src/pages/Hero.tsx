@@ -18,7 +18,6 @@ const Hero: React.FC = () => {
     password: "",
   });
   const [showAlert, setShowAlert] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const { setUsername } = useUser(); // Access setUsername from context
   const navigate = useNavigate();
@@ -101,7 +100,7 @@ const Hero: React.FC = () => {
                   Password
                 </h3>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   placeholder="Type here"
                   className="input input-bordered w-full max-w-xs"
                   value={password}
