@@ -1,4 +1,5 @@
 import React from "react";
+import CounterButton from "../components/CounterButton";
 
 const Hero: React.FC = () => {
     return (
