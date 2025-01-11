@@ -6,28 +6,42 @@ import { useNavigate } from "react-router-dom";
 const Hero: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [storedUsername, setStoredUsername] = useState("");
-  const [storedPassword, setStoredPassword] = useState("");
+  const [storedUser1, setStoredUser1] = useState({
+    username: "",
+    password: "",
+  });
+  const [storedUser2, setStoredUser2] = useState({
+    username: "",
+    password: "",
+  });
 
   const navigate = useNavigate();
 
   const getUserLogin = async () => {
-    const login1Ref = doc(db, "counters", "user1"); // Reference to user-specific document
-    const doc1Snap = await getDoc(login1Ref);
-
-    if (doc1Snap.exists()) {
-      //const data = docSnap.data();
-      setStoredUsername(doc1Snap.data().username); // Set the username state with the value from Firestore
-      setStoredPassword(doc1Snap.data().password); // Set the password state with the value from Firestore
+    // Fetch data for user1
+    const user1Ref = doc(db, "counters", "user1");
+    const user1Snap = await getDoc(user1Ref);
+    if (user1Snap.exists()) {
+      const user1Data = user1Snap.data();
+      setStoredUser1({
+        username: user1Data.username,
+        password: user1Data.password,
+      });
+    } else {
+      console.log("No data found for user1");
     }
 
-    const login2Ref = doc(db, "counters", "user2"); // Reference to user-specific document
-    const doc2Snap = await getDoc(login2Ref);
-
-    if (doc2Snap.exists()) {
-      //const data = docSnap.data();
-      setStoredUsername(doc2Snap.data().username); // Set the username state with the value from Firestore
-      setStoredPassword(doc2Snap.data().password); // Set the password state with the value from Firestore
+    // Fetch data for user2
+    const user2Ref = doc(db, "counters", "user2");
+    const user2Snap = await getDoc(user2Ref);
+    if (user2Snap.exists()) {
+      const user2Data = user2Snap.data();
+      setStoredUser2({
+        username: user2Data.username,
+        password: user2Data.password,
+      });
+    } else {
+      console.log("No data found for user2");
     }
   };
 
@@ -36,7 +50,10 @@ const Hero: React.FC = () => {
   }, []);
 
   const handleSubmitClick = () => {
-    if (username === storedUsername && password === storedPassword) {
+    if (
+      (username === storedUser1.username && password === storedUser1.password) ||
+      (username === storedUser2.username && password === storedUser2.password)
+    ) {
       navigate("/user");
     }
   };
