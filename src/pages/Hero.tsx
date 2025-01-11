@@ -53,14 +53,18 @@ const Hero: React.FC = () => {
   }, []);
 
   const handleSubmit = (event: React.FormEvent) => {
-    console.log("HELLO!");
     event.preventDefault();
     if (
-      (username === storedUser1.username &&
-        password === storedUser1.password) ||
-      (username === storedUser2.username && password === storedUser2.password)
+      username === storedUser1.username &&
+      password === storedUser1.password
     ) {
-      setUsername(username); // Update the context with the logged-in user's username
+      setUsername("user1");
+      navigate("/user");
+    } else if (
+      username === storedUser2.username &&
+      password === storedUser2.password
+    ) {
+      setUsername("user2"); // Update the context with the logged-in user's username
       navigate("/user");
     } else {
       setShowAlert(true);
@@ -107,7 +111,11 @@ const Hero: React.FC = () => {
               </div>
             </form>
           </div>
-          <div className={`transition-opacity duration-1000 ${showAlert ? "opacity-100" : "opacity-0"}`}>
+          <div
+            className={`transition-opacity duration-1000 ${
+              showAlert ? "opacity-100" : "opacity-0"
+            }`}
+          >
             <LoginAlert />
           </div>
         </div>
@@ -116,5 +124,4 @@ const Hero: React.FC = () => {
   );
 };
 
-//um idk
 export default Hero;
