@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 
 const CounterButton: React.FC = () => {
@@ -18,7 +18,7 @@ const CounterButton: React.FC = () => {
     if (docSnap.exists()) {
       setCounter(docSnap.data().counter); // Set the counter state with the value from Firestore
     } else {
-      await setDoc(counterRef, { counter: 0 }); // If document doesn't exist, create it with an initial value
+      await updateDoc(counterRef, { counter: 0 }); // If document doesn't exist, create it with an initial value
       setCounter(0); // Initialize local state
     }
   };
@@ -26,7 +26,7 @@ const CounterButton: React.FC = () => {
   // Increment the counter in Firestore
   const handleIncrementCounter = async () => {
     const counterRef = doc(db, "counters", "user1"); // Reference to user-specific document
-    await setDoc(counterRef, { counter: counter + 1 }); // Update Firestore with the new counter value
+    await updateDoc(counterRef, { counter: counter + 1 }); // Update Firestore with the new counter value
     setCounter(counter + 1); // Update local state to reflect new counter
   };
   return (
