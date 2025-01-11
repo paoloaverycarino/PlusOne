@@ -31,7 +31,7 @@ const CounterButton: React.FC = () => {
   };
   return (
     <>
-        <button className="btn" onClick={handleIncrementCounter}>Hello</button>
+        <button className="btn btn-wide" onClick={handleIncrementCounter}>Hello</button>
     </>
   );
 }
