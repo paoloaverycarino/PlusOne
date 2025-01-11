@@ -56,16 +56,11 @@ const Hero: React.FC = () => {
     console.log("HELLO!");
     event.preventDefault();
     if (
-      username === storedUser1.username &&
-      password === storedUser1.password
+      (username === storedUser1.username &&
+        password === storedUser1.password) ||
+      (username === storedUser2.username && password === storedUser2.password)
     ) {
-      setUsername("user1"); // Update the context with the logged-in user's username
-      navigate("/user");
-    } else if (
-      username === storedUser2.username &&
-      password === storedUser2.password
-    ) {
-      setUsername("user2"); // Update the context with the logged-in user's username
+      setUsername(username); // Update the context with the logged-in user's username
       navigate("/user");
     } else {
       setShowAlert(true);
