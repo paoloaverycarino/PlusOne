@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
   return (
     <body className="bg-[#525252]">
       <div className="flex items-center justify-center min-h-screen">
-        <div className="card bg-gradient-to-b from-[#FF6422] to-[#99147C] w-96 shadow-xl border-4 border-whi">
+        <div className="card bg-gradient-to-b from-[#FF6422] to-[#99147C] w-96 shadow-xl border-4 border-white">
           <div className="card-body">
             <h1 className="font-neue font-bold text-4xl text-white">PlusOne</h1>
             <h3 className="font-neue font-light text-sm text-white">
