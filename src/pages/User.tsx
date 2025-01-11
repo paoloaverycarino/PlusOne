@@ -3,26 +3,35 @@ import CounterButton from "../components/CounterButton";
 
 const User: React.FC = () => {
     return (
-       <body className="bg-[#525252] ">
+       <body className="flex items-center justify-center min-h-screen bg-[#525252] ">
             
-            
-            <div className="flex items-center justify-center h-screen">
-                    <div className="card glass w-200">
-                        <h1 className="font-neue font-bold text-4xl text-white">Andy</h1>
-                        <figure>
-                            <img
-                            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                            alt="car!" />
-                        </figure>
-                        <div className="card-body">
-                            <h2 className="card-title">Life hack</h2>
-
-                            <p>How to park your car at your garage?</p>
-                            <div className="card-actions justify-center">
-                            <CounterButton />
-                            </div>
-                        </div>
+            <div className="card glass shadow-xl w-96 p-6">
+                <div className="card-body grid grid-cols-2 gap-4">
+                
+                    <div className="bg-gray-200 p-4 rounded-lg shadow">
+                    <h3 className="font-bold text-lg">Section 1</h3>
+                    <p>Data or content for section 1</p>
                     </div>
+
+
+                    <div className="bg-gray-200 p-4 rounded-lg shadow">
+                    <h3 className="font-bold text-lg">Section 2</h3>
+                    <p>Data or content for section 2</p>
+                    </div>
+
+                
+                    <div className="bg-gray-200 p-4 rounded-lg shadow">
+                    <h3 className="font-bold text-lg">Section 3</h3>
+                    <p>Data or content for section 3</p>
+                    </div>
+
+
+                    <div className="bg-gray-200 p-4 rounded-lg shadow">
+                    <h3 className="font-bold text-lg">Section 4</h3>
+                    <CounterButton />
+                    <p>Data or content for section 4</p>
+                    </div>
+                </div>
             </div>
 
 
