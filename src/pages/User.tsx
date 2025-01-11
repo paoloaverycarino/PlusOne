@@ -1,6 +1,7 @@
 import React from "react";
 import CounterButton from "../components/CounterButton";
 import ContributionGraph from "../components/ContributionGraph";
+import UploadToday from "../components/UploadToday";
 
 const User: React.FC = () => {
   return (
@@ -20,12 +21,12 @@ const User: React.FC = () => {
                 </div>
               </div>
 
-              <div className="stats shadow">
+
                 <div className="stat flex items-center justify-center bg-gradient-to-b from-[#ffffff] to-[#A0E5EA]">
                     <div className="stat-title font-neue font-bold text-black">Calendar Gallery</div>
-                </div>
+
               </div>
-              
+
               <div className="stats shadow">
                 <div className="stat flex items-center justify-center bg-gradient-to-b from-[#ffffff] to-[#A0E5EA]">
                     <div className="stat-title font-neue font-bold text-black">Training Regime</div>
@@ -35,7 +36,6 @@ const User: React.FC = () => {
             </div>
           </div>
         </div>
-
         {/* Card 1 - Total */}
         <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
           <div className="card-body items-center flex-col justify-between h-full text-center">
@@ -49,8 +49,12 @@ const User: React.FC = () => {
 
         <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
           <div className="card-body items-center flex-col justify-between h-full text-center">
-            <h1 className="card-title font-neue font-bold text-8xl text-white">Total</h1>
-            <h1 className="card-title font-neue font-bold text-[20rem] text-white">0</h1>
+            <h1 className="card-title font-neue font-bold text-8xl text-white">
+              Total
+            </h1>
+            <h1 className="card-title font-neue font-bold text-[20rem] text-white">
+              0
+            </h1>
             <div className="card-actions">
               <CounterButton />
             </div>
@@ -60,7 +64,6 @@ const User: React.FC = () => {
 
       {/* New Long Card Underneath */}
       <ContributionGraph />
-
     </body>
   );
 };
