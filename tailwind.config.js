@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        neue: ['NeueMontreal', 'sans-serif'], // Custom font family name and fallback
+      },
+    },
   },
   plugins: [
     require('daisyui'),
