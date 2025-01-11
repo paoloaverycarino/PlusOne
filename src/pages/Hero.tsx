@@ -125,4 +125,5 @@ const Hero: React.FC = () => {
   );
 };
 
+//um idk
 export default Hero;
