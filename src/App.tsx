@@ -7,7 +7,7 @@ import './index.css';
 const App: React.FC = () => {
   return (
 
-      <Router>
+      <Router basename="/PlusOne/">
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route path="/User" element={<User />} />
