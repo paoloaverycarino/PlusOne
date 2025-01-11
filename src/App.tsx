@@ -1,12 +1,18 @@
 import React from 'react';
-import Hero from './components/Hero';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Hero from './pages/Hero';
+import User from './pages/User';
 import './index.css';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <Hero />
-    </div>
+
+      <Router>
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/User" element={<User />} />
+        </Routes>
+      </Router>
   );
 };
 
