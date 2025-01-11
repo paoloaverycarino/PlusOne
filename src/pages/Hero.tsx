@@ -112,11 +112,7 @@ const Hero: React.FC = () => {
               </div>
             </form>
           </div>
-          <div
-            className={`transition-opacity duration-1000 ${
-              showAlert ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <div className={`transition-opacity duration-1000 ${showAlert ? "opacity-100" : "opacity-0"}`}>
             <LoginAlert />
           </div>
         </div>
