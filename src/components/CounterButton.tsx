@@ -7,8 +7,6 @@ const CounterButton: React.FC = () => {
   const { username } = useUser(); // Access username from context
   const [counter, setCounter] = useState(0);
 
-  console.log(username);
-
   // Fetch counter value from Firestore for the specific user
   useEffect(() => {
     if (username) {
