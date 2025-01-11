@@ -18,6 +18,7 @@ const Hero: React.FC = () => {
     password: "",
   });
   const [showAlert, setShowAlert] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const { setUsername } = useUser(); // Access setUsername from context
   const navigate = useNavigate();
@@ -98,14 +99,23 @@ const Hero: React.FC = () => {
                 <h3 className="font-neue font-light text-sm text-white">
                   Password
                 </h3>
-                <input
-                  type="password"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-xs"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <div className="flex relative">
+                  <input
+                    type={passwordVisible ? "text" : "password"}
+                    placeholder="Type here"
+                    className="input input-bordered w-full max-w-xs"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-xs absolute right-2 top-3 border border-[#A0E5EA]"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  >
+                    {passwordVisible ? "Hide" : "Show"}
+                  </button>
+                </div>
                 <div className="card-actions justify-end"></div>
                 <button type="submit" className="hidden"></button>
               </div>
