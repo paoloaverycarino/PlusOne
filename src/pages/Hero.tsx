@@ -1,10 +1,12 @@
+// src/pages/Hero.tsx
 import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext"; // Import the context
 
 const Hero: React.FC = () => {
-  const [username, setUsername] = useState("");
+  const [username, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
   const [storedUser1, setStoredUser1] = useState({
     username: "",
@@ -15,10 +17,10 @@ const Hero: React.FC = () => {
     password: "",
   });
 
+  const { setUsername } = useUser(); // Access setUsername from context
   const navigate = useNavigate();
 
   const getUserLogin = async () => {
-    // Fetch data for user1
     const user1Ref = doc(db, "counters", "user1");
     const user1Snap = await getDoc(user1Ref);
     if (user1Snap.exists()) {
@@ -31,7 +33,6 @@ const Hero: React.FC = () => {
       console.log("No data found for user1");
     }
 
-    // Fetch data for user2
     const user2Ref = doc(db, "counters", "user2");
     const user2Snap = await getDoc(user2Ref);
     if (user2Snap.exists()) {
@@ -51,9 +52,11 @@ const Hero: React.FC = () => {
 
   const handleSubmitClick = () => {
     if (
-      (username === storedUser1.username && password === storedUser1.password) ||
+      (username === storedUser1.username &&
+        password === storedUser1.password) ||
       (username === storedUser2.username && password === storedUser2.password)
     ) {
+      setUsername(username); // Update the context with the logged-in user's username
       navigate("/user");
     }
   };
@@ -72,7 +75,7 @@ const Hero: React.FC = () => {
               placeholder="Type here"
               className="input input-bordered w-full max-w-xs"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsernameInput(e.target.value)}
             />
             <h3 className="font-neue font-light text-sm text-white">
               Password
@@ -84,7 +87,6 @@ const Hero: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <div className="card-actions justify-end">
               <button
                 className="btn btn-sm btn-primary"
