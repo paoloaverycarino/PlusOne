@@ -10,7 +10,6 @@ const User: React.FC = () => {
                 <h1 className="card-title font-neue font-bold text-9xl text-white">0</h1>
                 <div className="card-actions">
                 <button className="btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">+1</button>
-                <CounterButton />
                 </div>
             </div>
         </div>
