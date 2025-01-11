@@ -1,39 +1,64 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { useUser } from "../contexts/UserContext"; // Import the context
 
 const CounterButton: React.FC = () => {
+  const { username } = useUser(); // Access username from context
   const [counter, setCounter] = useState(0);
 
-  // Fetch counter value from Firestore when the component mounts
+  // Fetch counter value from Firestore for the specific user
   useEffect(() => {
-    getUserCounter();
-  }, []);
+    if (username) {
+      getUserCounter();
+    }
+  }, [username]);
 
-  // Get counter value from Firestore
   const getUserCounter = async () => {
-    const counterRef = doc(db, "counters", "user1"); // Reference to user-specific document
-    const docSnap = await getDoc(counterRef);
+    if (username) {
+      const counterRef = doc(db, "counters", username); // Use the username as the document ID
+      const docSnap = await getDoc(counterRef);
 
-    if (docSnap.exists()) {
-      setCounter(docSnap.data().counter); // Set the counter state with the value from Firestore
+      if (docSnap.exists()) {
+        setCounter(docSnap.data().counter); // Set the counter state with the value from Firestore
+      } else {
+        // If document doesn't exist, create it with an initial counter value of 0
+        await setDoc(counterRef, { counter: 0 });
+        setCounter(0); // Initialize local state
+      }
     } else {
-      await updateDoc(counterRef, { counter: 0 }); // If document doesn't exist, create it with an initial value
-      setCounter(0); // Initialize local state
+      console.log("No username found. Please log in first.");
     }
   };
 
-  // Increment the counter in Firestore
+  // Increment the counter for the specific user
   const handleIncrementCounter = async () => {
-    const counterRef = doc(db, "counters", "user1"); // Reference to user-specific document
-    await updateDoc(counterRef, { counter: counter + 1 }); // Update Firestore with the new counter value
-    setCounter(counter + 1); // Update local state to reflect new counter
+    if (username) {
+      const counterRef = doc(db, "counters", username); // Use the username as the document ID
+      const docSnap = await getDoc(counterRef); // Check if the document exists
+
+      if (docSnap.exists()) {
+        // If the document exists, update the counter
+        await updateDoc(counterRef, { counter: counter + 1 });
+      } else {
+        // If the document doesn't exist, create it with the initial counter value
+        await setDoc(counterRef, { counter: counter + 1 });
+      }
+      setCounter(counter + 1); // Update local state to reflect new counter
+    } else {
+      console.log("No username found. Please log in first.");
+    }
   };
+
   return (
     <>
-        <button className="btn btn-wide" onClick={handleIncrementCounter}>Hello</button>
+      <button className="btn btn-wide" onClick={handleIncrementCounter}>
+        Hello
+      </button>
+      <p>Current counter: {counter}</p>
     </>
   );
-}
+};
 
 export default CounterButton;
+
