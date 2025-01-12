@@ -46,7 +46,7 @@ const ContributionGraph: React.FC = () => {
     };
   
     return (
-      <div className="w-[100rem] p-4 bg-gradient-to-b from-[#df94e5] to-[#e96e35] rounded-lg shadow-2xl">
+      <div className="w-[100rem] p-4 bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] rounded-lg shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <button
             className="font-neue font-bold text-9xl text-gray-600 hover:text-gray-800"
@@ -64,7 +64,7 @@ const ContributionGraph: React.FC = () => {
         </div>
   
         {/* Displaying each month in a 6-column grid */}
-        <div className="grid grid-cols-6 gap-2"> {/* 6 columns in each row */}
+        <div className="grid grid-cols-6 gap-4"> {/* 6 columns in each row */}
           {months.map((month, monthIndex) => {
             // Get the start and end of the month
             const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
