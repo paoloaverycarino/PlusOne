@@ -5,6 +5,7 @@ import Hero from "./pages/Hero";
 import User from "./pages/User";
 import Calendar from "./pages/Calendar";
 import Training from "./pages/Training";
+import Gallery from "./pages/Gallery";
 import "./index.css";
 
 const App: React.FC = () => {
@@ -16,6 +17,7 @@ const App: React.FC = () => {
           <Route path="/User" element={<User />} />
           <Route path="/Calendar" element={<Calendar />} />
           <Route path="/Training" element={<Training />} />
+          <Route path="/Gallery" element={<Gallery />} />
         </Routes>
       </Router>
     </UserProvider>

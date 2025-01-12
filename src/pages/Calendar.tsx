@@ -1,12 +1,13 @@
-// src/pages/Calendar.tsx
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebase"; // Path to your Firebase config
 import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
 
 const Calendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null); // State to track selected date
   const [imageURL, setImageURL] = useState<string | null>(null); // State to hold image URL for the clicked date
   const { username } = useUser();
 
@@ -16,7 +17,6 @@ const Calendar: React.FC = () => {
 
   // Get the number of days in the current month
   const getDaysInCurrentMonth = () => {
-    // const startOfMonth = new Date(currentYear, currentMonth, 1);
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
     const daysArray = Array.from(
       { length: endOfMonth.getDate() },
@@ -28,32 +28,32 @@ const Calendar: React.FC = () => {
   // Navigate to the previous month
   const goToPreviousMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+    setSelectedDate(null); // Reset selected date
   };
 
   // Navigate to the next month
   const goToNextMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+    setSelectedDate(null); // Reset selected date
   };
 
   // Fetch the data for the clicked day (get image URL)
   const fetchDataForDay = async (dateString: string) => {
-    console.log(username);
-    console.log(dateString);
+    setSelectedDate(dateString); // Update selected date
     const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      // Assuming the data structure has a field 'imageUrl'
       const data = docSnap.data();
       if (data && data.imageURL) {
-        setImageURL(data.imageURL); // Update the image URL state
+        setImageURL(data.imageURL);
       } else {
-        console.log("Field 'dataURL' does not exist in the document.");
-        setImageURL(null); // Clear the image URL state
+        console.log("Field 'imageURL' does not exist in the document.");
+        setImageURL(null);
       }
     } else {
       console.log("No data for this day");
-      setImageURL(null); // Clear the image URL state
+      setImageURL(null);
     }
   };
 
@@ -64,18 +64,19 @@ const Calendar: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-      {/* Container for the calendar and image viewer */}
       <div className="flex items-start justify-center space-x-8">
+
+
         {/* Left: Calendar Grid */}
         <div className="w-1/2 p-4">
           <div className="flex justify-between items-center w-full mb-6">
             <button
               onClick={goToPreviousMonth}
-              className="px-4 py-2 text-lg font-bold bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 text-sm text-white glass font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
             >
               &lt; Previous
             </button>
-            <span className="text-xl font-semibold">{`${currentDate.toLocaleString(
+            <span className="text-2xl font-neue text-black font-bold">{`${currentDate.toLocaleString(
               "default",
               {
                 month: "long",
@@ -83,7 +84,7 @@ const Calendar: React.FC = () => {
             )} ${currentYear}`}</span>
             <button
               onClick={goToNextMonth}
-              className="px-4 py-2 text-lg font-bold bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 text-sm glass text-white font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
             >
               Next &gt;
             </button>
@@ -123,19 +124,37 @@ const Calendar: React.FC = () => {
               return (
                 <div
                   key={day}
-                  className="w-16 h-16 border-2 border-gray-300 rounded-lg flex items-center justify-center cursor-pointer"
-                  onClick={() => fetchDataForDay(formattedDate)} // Pass formatted date
+                  className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer ${
+                    selectedDate === formattedDate
+                      ? "glass bg-blue-500 text-white"
+                      : "bg-white border-gray-300 hover:bg-gray-200"
+                  }`}
+                  onClick={() => fetchDataForDay(formattedDate)}
                 >
                   {day}
                 </div>
               );
             })}
           </div>
-        </div>
 
-        {/* Right: 9:16 Image Viewer in Phone Mockup */}
+        {/* View All Images Button */}
+          <div className="flex justify-center mt-6">
+            <Link to="/gallery" >
+                <button
+                className="px-6 py-3 glass text-white bg-green-500 rounded-lg font-bold text-lg 
+               hover:bg-green-600 hover:scale-105 active:scale-110 
+               transition-transform duration-200"
+                >
+                View All Images
+                </button>
+            </Link>
+            </div>
+        </div>
+        
+
+        {/* Right: Image Viewer */}
         <div className="w-1/2 p-4">
-          <div className="mockup-phone relative bg-white shadow-xl">
+          <div className="mockup-phone relative bg-black shadow-2xl">
             <div className="camera"></div>
             <div className="display">
               <div className="artboard artboard-demo phone-1 w-full h-full flex items-center justify-center">
@@ -149,13 +168,14 @@ const Calendar: React.FC = () => {
                   </div>
                 ) : (
                   <p className="text-center text-lg font-semibold text-gray-500">
-                    No Image Avaiable
+                    No Image Available
                   </p>
                 )}
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
