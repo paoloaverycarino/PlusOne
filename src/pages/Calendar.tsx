@@ -4,13 +4,17 @@ import { db } from "../services/firebase"; // Path to your Firebase config
 import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingScreen"; // Import the LoadingSpinner component
 
 const Calendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // State to track selected date
   const [imageURL, setImageURL] = useState<string | null>(null); // State to hold image URL for the clicked date
-  const [loginStatuses, setLoginStatuses] = useState<Record<string, boolean>>({}); // State to track login status for each day
+  const [loginStatuses, setLoginStatuses] = useState<Record<string, boolean>>(
+    {}
+  ); // State to track login status for each day
+  const [loading, setLoading] = useState<boolean>(false); // State to track loading status
   const { username } = useUser();
 
   // Get the current year and month
@@ -41,12 +45,19 @@ const Calendar: React.FC = () => {
 
   // Fetch login status for each day of the current month
   const fetchLoginStatusesForMonth = async () => {
+    setLoading(true); // Show the spinner
+
     const statuses: Record<string, boolean> = {};
+
     for (let day = 1; day <= daysInMonth.length; day++) {
       const formattedDate = `${(currentMonth + 1)
         .toString()
         .padStart(2, "0")}-${day.toString().padStart(2, "0")}-${currentYear}`;
-      const docRef = doc(db, `counters/${username}/dailyLogins/${formattedDate}`);
+
+      const docRef = doc(
+        db,
+        `counters/${username}/dailyLogins/${formattedDate}`
+      );
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -55,7 +66,9 @@ const Calendar: React.FC = () => {
         statuses[formattedDate] = false; // No data for this day
       }
     }
+
     setLoginStatuses(statuses); // Update the state with all login statuses
+    setLoading(false); // Hide the spinner once loading is done
   };
 
   // Fetch image for the clicked day
@@ -92,7 +105,7 @@ const Calendar: React.FC = () => {
         </div>
         <div className="flex items-start justify-center space-x-8">
           {/* Left: Calendar Grid */}
-          <div className="w-1/2 p-4">
+          <div className="w-1/2 p-4 border">
             <div className="flex justify-between items-center w-full mb-6">
               <button
                 onClick={goToPreviousMonth}
@@ -116,14 +129,16 @@ const Calendar: React.FC = () => {
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-4 w-full">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <div
-                  key={day}
-                  className="flex items-center justify-center font-semibold text-gray-600"
-                >
-                  {day}
-                </div>
-              ))}
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                (day) => (
+                  <div
+                    key={day}
+                    className="flex items-center justify-center font-semibold text-gray-600"
+                  >
+                    {day}
+                  </div>
+                )
+              )}
               {/* Blank spaces for the first week */}
               {(() => {
                 const startOfMonth = new Date(currentYear, currentMonth, 1);
@@ -149,7 +164,7 @@ const Calendar: React.FC = () => {
                 return (
                   <div
                     key={day}
-                    className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer ${
+                    className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-300 ease-in-out ${
                       selectedDate === formattedDate
                         ? "glass bg-blue-500 text-white"
                         : isLoggedIn
@@ -164,19 +179,18 @@ const Calendar: React.FC = () => {
               })}
             </div>
             {/* View All Images Button */}
-          <div className="flex justify-center mt-6">
-            <Link to="/gallery" >
+            <div className="flex justify-center mt-6">
+              <Link to="/gallery">
                 <button
-                className="px-6 py-3 glass text-white bg-green-500 rounded-lg font-bold text-lg 
+                  className="px-6 py-3 glass text-white bg-green-500 rounded-lg font-bold text-lg 
                hover:bg-green-600 hover:scale-105 active:scale-110 
                transition-transform duration-200"
                 >
-                View All Images
+                  View All Images
                 </button>
-            </Link>
+              </Link>
             </div>
           </div>
-          
 
           {/* Right: Image Viewer */}
           <div className="w-1/2 p-4">
@@ -203,6 +217,13 @@ const Calendar: React.FC = () => {
           </div>
         </div>
       </div>
+
+        {/* Show the loading spinner while data is loading */}
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-white z-50 scale-150">
+            <LoadingSpinner />
+          </div>
+        )}
     </>
   );
 };
