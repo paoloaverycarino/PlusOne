@@ -4,14 +4,15 @@ import ContributionGraph from "../components/ContributionGraph";
 import UploadToday from "../components/UploadToday";
 import { Link } from "react-router-dom";
 import { db } from "../services/firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
 
 const User: React.FC = () => {
   const { username } = useUser();
   const [user1Counter, setUser1Counter] = useState<number>(0);
   const [user2Counter, setUser2Counter] = useState<number>(0);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [user1LoggedIn, setUser1LoggedIn] = useState<boolean>(false);
+  const [user2LoggedIn, setUser2LoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     if (username) {
@@ -20,7 +21,7 @@ const User: React.FC = () => {
     }
   }, [username]);
 
-  const fetchLoggedInStatus = () => {
+  const fetchLoggedInStatus = async () => {
     const today = new Date();
     const formattedDate = `${(today.getMonth() + 1)
       .toString()
@@ -29,19 +30,28 @@ const User: React.FC = () => {
       .toString()
       .padStart(2, "0")}-${today.getFullYear()}`;
 
-    const dailyLoginRef = doc(
+    const user1LoginRef = doc(
       db,
-      `counters/${username}/dailyLogins/${formattedDate}`
+      `counters/user1/dailyLogins/${formattedDate}`
+    );
+    const user2LoginRef = doc(
+      db,
+      `counters/user2/dailyLogins/${formattedDate}`
     );
 
-    const unsubscribe = onSnapshot(dailyLoginRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setLoggedIn(data?.loggedIn || false); // Update loggedIn state
-      }
-    });
+    try {
+      const user1LoginSnap = await getDoc(user1LoginRef);
+      const user2LoginSnap = await getDoc(user2LoginRef);
 
-    return () => unsubscribe();
+      if (user1LoginSnap.exists()) {
+        setUser1LoggedIn(user1LoginSnap.data().loggedIn || false);
+      }
+      if (user2LoginSnap.exists()) {
+        setUser2LoggedIn(user2LoginSnap.data().loggedIn || false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const getUserCounter = async () => {
@@ -144,7 +154,9 @@ const User: React.FC = () => {
                   </h1>
                   <div className="card-actions">
                     <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                      +1
+                      {user2LoggedIn
+                        ? "Andy went to the gym!"
+                        : "Andy has not gone to the gym!"}
                     </button>
                   </div>
                 </div>
@@ -179,7 +191,9 @@ const User: React.FC = () => {
                   </h1>
                   <div className="card-actions">
                     <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                      +1
+                      {user1LoggedIn
+                        ? "Paolo went to the gym!"
+                        : "Paolo has not gone to the gym!"}
                     </button>
                   </div>
                 </div>
