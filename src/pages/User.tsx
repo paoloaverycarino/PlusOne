@@ -84,7 +84,9 @@ const User: React.FC = () => {
     <body className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="h-[90vh] flex items-center justify-center">
         <div className="flex gap-6 mb-4">
-          {/* Card for Upload Today */}
+      
+
+          {/* Progress Card  */}
           <div className="card bg-black w-[32rem] h-[32rem] shadow-2xl">
             <div className="card-body flex flex-col items-center space-y-4 text-center">
               <h1 className="card-title font-neue font-bold text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#FED90B] to-[#FF8C00] leading-[1.2]">
@@ -119,6 +121,8 @@ const User: React.FC = () => {
               </div>
             </div>
           </div>
+
+{/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
 
           {/* Conditional layout based on user */}
           {isUser1 ? (
