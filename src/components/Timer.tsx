@@ -42,36 +42,34 @@ const Timer: React.FC = () => {
   }, []);
 
   return (
-
     <div className="flex flex-col justify-center items-center">
-
       <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-
-            <span className="countdown font-mono text-5xl">
-              <span style={{ "--value": hours } as React.CSSProperties}></span>
-            </span>
-            hours
-          </div>
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span style={{ "--value": minutes } as React.CSSProperties}></span>
-            </span>
-            min
-          </div>
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span style={{ "--value": seconds } as React.CSSProperties}></span>
-            </span>
-            sec
-          </div>
+        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content hover:bg-red-500 transition-colors duration-300">
+          <span className="countdown font-mono text-5xl">
+            <span style={{ "--value": hours } as React.CSSProperties}></span>
+          </span>
+          hours
+        </div>
+        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content hover:bg-red-500 transition-colors duration-300">
+          <span className="countdown font-mono text-5xl">
+            <span style={{ "--value": minutes } as React.CSSProperties}></span>
+          </span>
+          min
+        </div>
+        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content hover:bg-red-500 transition-colors duration-300">
+          <span className="countdown font-mono text-5xl">
+            <span style={{ "--value": seconds } as React.CSSProperties}></span>
+          </span>
+          sec
+        </div>
       </div>
-
+  
       <h1 className="text-white font-mono pt-4">
         Get Your Dailies!
       </h1>
     </div>
   );
+  
 };
 
 export default Timer;

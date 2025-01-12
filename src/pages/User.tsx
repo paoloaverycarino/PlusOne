@@ -130,9 +130,11 @@ const User: React.FC = () => {
               {/* User 1 Counter on the Left */}
               <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
                 <div className="card-body items-center flex-col justify-between h-full text-center">
+                  <div>
                   <h1 className="card-title font-neue font-bold text-8xl text-white">
                     Total
                   </h1>
+                  </div>
                   <h1 className="card-title font-neue font-bold text-[10rem] text-white">
                     {user1Counter}
                   </h1>
