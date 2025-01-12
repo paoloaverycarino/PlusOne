@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useUser } from "../contexts/UserContext"; // Import the context
 
-const CounterButton: React.FC = () => {
-  const { username } = useUser(); // Access username from context
-  const [counter, setCounter] = useState(0);
+interface CounterButtonProps {
+    currentCounter: number;
+    onCounterUpdate: (newCounter: number) => void;
+  }
 
-  console.log(username);
+const CounterButton: React.FC<CounterButtonProps> = ({ currentCounter, onCounterUpdate }) => {
+  const { username } = useUser(); // Access username from context
 
   // Fetch counter value from Firestore for the specific user
   useEffect(() => {
@@ -22,7 +24,7 @@ const CounterButton: React.FC = () => {
       const docSnap = await getDoc(counterRef);
 
       if (docSnap.exists()) {
-        setCounter(docSnap.data().counter); // Set the counter state with the value from Firestore
+        onCounterUpdate(docSnap.data().counter); // Set the counter state with the value from Firestore
       }
     }
   };
@@ -35,9 +37,9 @@ const CounterButton: React.FC = () => {
 
       if (docSnap.exists()) {
         // If the document exists, update the counter
-        await updateDoc(counterRef, { counter: counter + 1 });
+        await updateDoc(counterRef, { counter: currentCounter + 1 });
       } 
-      setCounter(counter + 1); // Update local state to reflect new counter
+      onCounterUpdate(currentCounter + 1); // Update local state to reflect new counter
     } 
   };
 
