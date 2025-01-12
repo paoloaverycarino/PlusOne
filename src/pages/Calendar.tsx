@@ -14,7 +14,7 @@ const Calendar: React.FC = () => {
 
     // Get the number of days in the current month
     const getDaysInCurrentMonth = () => {
-        const startOfMonth = new Date(currentYear, currentMonth, 1);
+        // const startOfMonth = new Date(currentYear, currentMonth, 1);
         const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
         const daysArray = Array.from(
             { length: endOfMonth.getDate() },
