@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import HomeButton from "../components/HomeButton";
 import { db } from "../services/firebase"; // Path to your Firebase config
 import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
@@ -9,11 +10,17 @@ const Calendar: React.FC = () => {
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // State to track selected date
   const [imageURL, setImageURL] = useState<string | null>(null); // State to hold image URL for the clicked date
+  const [loggedIn, setLoggedIn] = useState<boolean>(false); // State to track if the user is logged in
   const { username } = useUser();
 
   // Get the current year and month
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
+
+  const todayDate = `${(currentMonth + 1).toString().padStart(2, "0")}-${currentDate
+    .getDate()
+    .toString()
+    .padStart(2, "0")}-${currentYear}`;
 
   // Get the number of days in the current month
   const getDaysInCurrentMonth = () => {
@@ -37,36 +44,57 @@ const Calendar: React.FC = () => {
     setSelectedDate(null); // Reset selected date
   };
 
-  // Fetch the data for the clicked day (get image URL)
-  const fetchDataForDay = async (dateString: string) => {
-    setSelectedDate(dateString); // Update selected date
-    const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      if (data && data.imageURL) {
-        setImageURL(data.imageURL);
+    // Fetch login status for today
+    const fetchLoginStatusForToday = async () => {
+      const docRef = doc(db, `counters/${username}/dailyLogins/${todayDate}`);
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data?.loggedIn) {
+          setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
+        }
       } else {
-        console.log("Field 'imageURL' does not exist in the document.");
-        setImageURL(null);
+        setLoggedIn(false); // No data for today
       }
-    } else {
-      console.log("No data for this day");
-      setImageURL(null);
-    }
-  };
-
-  // Use useEffect to get the days in the current month
-  useEffect(() => {
-    getDaysInCurrentMonth();
-  }, [currentDate]);
+    };
+  
+    // Fetch image for the clicked day
+    const fetchImageForDay = async (dateString: string) => {
+      setSelectedDate(dateString); // Update selected date
+      const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data?.imageURL) {
+          setImageURL(data.imageURL);
+        } else {
+          console.log("Field 'imageURL' does not exist in the document.");
+          setImageURL(null);
+        }
+      } else {
+        console.log("No data for this day");
+        setImageURL(null); // Reset the image URL if no data is found
+      }
+    };
+  
+    // Use useEffect to get the days in the current month
+    useEffect(() => {
+      getDaysInCurrentMonth();
+      fetchLoginStatusForToday(); // Fetch the login status for today
+  
+    }, [currentDate]);
 
   return (
+    <>
     <div className="flex items-center justify-center min-h-screen bg-white">
+      <div className="absolute top-5 left-5">
+        <HomeButton />
+      </div>
       <div className="flex items-start justify-center space-x-8">
-
-
         {/* Left: Calendar Grid */}
         <div className="w-1/2 p-4">
           <div className="flex justify-between items-center w-full mb-6">
@@ -127,9 +155,11 @@ const Calendar: React.FC = () => {
                   className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer ${
                     selectedDate === formattedDate
                       ? "glass bg-blue-500 text-white"
+                      : loggedIn && formattedDate === todayDate
+                      ? "bg-green-500 text-white" // Check for today and make it green
                       : "bg-white border-gray-300 hover:bg-gray-200"
                   }`}
-                  onClick={() => fetchDataForDay(formattedDate)}
+                  onClick={() => fetchImageForDay(formattedDate)}
                 >
                   {day}
                 </div>
@@ -178,6 +208,7 @@ const Calendar: React.FC = () => {
 
       </div>
     </div>
+    </>
   );
 };
 
