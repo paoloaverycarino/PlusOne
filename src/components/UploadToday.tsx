@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { storage, db } from "../services/firebase"; // Assuming you have firebase initialized here
 import { useUser } from "../contexts/UserContext";
 
@@ -10,19 +10,32 @@ function UploadToday() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    // Fetch the loggedIn status and imageURL from Firestore
-    const fetchUserData = async () => {
-      try {
-        const dailyLoginRef = doc(db, `counters/${username}/dailyLogins/`);
-        const docSnap = await getDoc(dailyLoginRef);
+    // Fetch the loggedIn status and imageURL from Firestore in real-time
+    const fetchUserData = () => {
+      const today = new Date();
+      const formattedDate = `${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${today
+        .getDate()
+        .toString()
+        .padStart(2, "0")}-${today.getFullYear()}`;
+
+      const dailyLoginRef = doc(
+        db,
+        `counters/${username}/dailyLogins/${formattedDate}`
+      );
+
+      // Listen for real-time changes to the dailyLogin document
+      const unsubscribe = onSnapshot(dailyLoginRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setImage(data?.imageURL || null); // Set image URL if exists
           setLoggedIn(data?.loggedIn || false); // Set loggedIn status
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
+      });
+
+      // Cleanup the listener when the component is unmounted
+      return () => unsubscribe();
     };
 
     fetchUserData();
@@ -63,7 +76,6 @@ function UploadToday() {
         .getDate()
         .toString()
         .padStart(2, "0")}-${today.getFullYear()}`;
-      console.log(formattedDate);
 
       const dailyLoginRef = doc(
         db,
