@@ -6,7 +6,8 @@ import UploadToday from "../components/UploadToday";
 const User: React.FC = () => {
   return (
     <body className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <div className="flex gap-4 mb-4"> {/* Adds margin to separate the new card */}
+      
+      <div className="flex gap-4 mb-4">
 
         <div className="card bg-black w-[32rem] h-[32rem] shadow-2xl">
           <div className="card-body flex flex-col items-center space-y-4 text-center">
