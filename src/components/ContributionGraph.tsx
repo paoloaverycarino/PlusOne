@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebase"; // Path to your Firebase config
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
 
 const ContributionGraph: React.FC = () => {
-    const [currentDate, setCurrentDate] = useState<Date>(new Date());
-    const [loggedIn, setLoggedIn] = useState<boolean>(false); // State to track if the user is logged in
-    const { username } = useUser();
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [loggedInDays, setLoggedInDays] = useState<Set<string>>(new Set()); // Store the logged-in dates
+  const { username } = useUser();
 
-    useEffect(() => {
-      const todayDate = getFormattedDate();
-      const dailyLoginRef = doc(db, `counters/${username}/dailyLogins/${todayDate}`);
-  
-      const unsubscribe = onSnapshot(dailyLoginRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setLoggedIn(data?.loggedIn || false);
-        }
+  useEffect(() => {
+    const dailyLoginsRef = collection(db, `counters/${username}/dailyLogins`);
+    
+    // Query for all documents where loggedIn is true
+    const q = query(dailyLoginsRef, where("loggedIn", "==", true));
+
+    const unsubscribe = onSnapshot(q, (querySnap) => {
+      const loggedInDates: Set<string> = new Set();
+      querySnap.forEach((docSnap) => {
+        loggedInDates.add(docSnap.id); // doc ID is the date in MM-DD-YYYY format
       });
-  
       // Cleanup the listener when the component is unmounted
       return () => unsubscribe();
     }, [username]);
@@ -95,34 +95,32 @@ const ContributionGraph: React.FC = () => {
   
                   {/* Days in the current month as empty squares */}
                   {daysInMonth.map((_, dayIndex) => {
+
                   const dayDate = new Date(
                     month.getFullYear(),
                     month.getMonth(),
                     dayIndex + 1
                   );
-                  const isToday =
-                    dayDate.toDateString() === new Date().toDateString();
+                  const formattedDate = getFormattedDate(dayDate);
 
                   return (
                     <div
                       key={dayIndex}
                       className={`w-5 h-5 border ${
-                        isToday
-                          ? loggedIn
-                            ? "bg-green-500"
-                            : "bg-gray-200"
+                        loggedInDays.has(formattedDate)
+                          ? "bg-green-500"
                           : "bg-white"
                       }`}
                     />
                   );
                 })}
-                </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default ContributionGraph;

@@ -10,17 +10,12 @@ const Calendar: React.FC = () => {
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // State to track selected date
   const [imageURL, setImageURL] = useState<string | null>(null); // State to hold image URL for the clicked date
-  const [loggedIn, setLoggedIn] = useState<boolean>(false); // State to track if the user is logged in
+  const [loginStatuses, setLoginStatuses] = useState<Record<string, boolean>>({}); // State to track login status for each day
   const { username } = useUser();
 
   // Get the current year and month
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
-
-  const todayDate = `${(currentMonth + 1).toString().padStart(2, "0")}-${currentDate
-    .getDate()
-    .toString()
-    .padStart(2, "0")}-${currentYear}`;
 
   // Get the number of days in the current month
   const getDaysInCurrentMonth = () => {
@@ -44,130 +39,131 @@ const Calendar: React.FC = () => {
     setSelectedDate(null); // Reset selected date
   };
 
-    // Fetch login status for today
-    const fetchLoginStatusForToday = async () => {
-      const docRef = doc(db, `counters/${username}/dailyLogins/${todayDate}`);
+  // Fetch login status for each day of the current month
+  const fetchLoginStatusesForMonth = async () => {
+    const statuses: Record<string, boolean> = {};
+    for (let day = 1; day <= daysInMonth.length; day++) {
+      const formattedDate = `${(currentMonth + 1)
+        .toString()
+        .padStart(2, "0")}-${day.toString().padStart(2, "0")}-${currentYear}`;
+      const docRef = doc(db, `counters/${username}/dailyLogins/${formattedDate}`);
       const docSnap = await getDoc(docRef);
-  
       if (docSnap.exists()) {
         const data = docSnap.data();
-        if (data?.loggedIn) {
-          setLoggedIn(true);
-        } else {
-          setLoggedIn(false);
-        }
+        statuses[formattedDate] = data?.loggedIn || false;
       } else {
-        setLoggedIn(false); // No data for today
+        statuses[formattedDate] = false; // No data for this day
       }
-    };
-  
-    // Fetch image for the clicked day
-    const fetchImageForDay = async (dateString: string) => {
-      setSelectedDate(dateString); // Update selected date
-      const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
-      const docSnap = await getDoc(docRef);
-  
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data?.imageURL) {
-          setImageURL(data.imageURL);
-        } else {
-          console.log("Field 'imageURL' does not exist in the document.");
-          setImageURL(null);
-        }
+    }
+    setLoginStatuses(statuses); // Update the state with all login statuses
+  };
+
+  // Fetch image for the clicked day
+  const fetchImageForDay = async (dateString: string) => {
+    setSelectedDate(dateString); // Update selected date
+    const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (data?.imageURL) {
+        setImageURL(data.imageURL);
       } else {
-        console.log("No data for this day");
-        setImageURL(null); // Reset the image URL if no data is found
+        console.log("Field 'imageURL' does not exist in the document.");
+        setImageURL(null);
       }
-    };
-  
-    // Use useEffect to get the days in the current month
-    useEffect(() => {
-      getDaysInCurrentMonth();
-      fetchLoginStatusForToday(); // Fetch the login status for today
-  
-    }, [currentDate]);
+    } else {
+      console.log("No data found for this day.");
+      setImageURL(null); // Reset the image URL if no data is found
+    }
+  };
+
+  // Use useEffect to get the days in the current month and login statuses for all days
+  useEffect(() => {
+    getDaysInCurrentMonth();
+    fetchLoginStatusesForMonth(); // Fetch login statuses for all days
+  }, [currentDate, daysInMonth.length]);
 
   return (
     <>
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div className="absolute top-5 left-5">
-        <HomeButton />
-      </div>
-      <div className="flex items-start justify-center space-x-8">
-        {/* Left: Calendar Grid */}
-        <div className="w-1/2 p-4">
-          <div className="flex justify-between items-center w-full mb-6">
-            <button
-              onClick={goToPreviousMonth}
-              className="px-4 py-2 text-sm text-white glass font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
-            >
-              &lt; Previous
-            </button>
-            <span className="text-2xl font-neue text-black font-bold">{`${currentDate.toLocaleString(
-              "default",
-              {
-                month: "long",
-              }
-            )} ${currentYear}`}</span>
-            <button
-              onClick={goToNextMonth}
-              className="px-4 py-2 text-sm glass text-white font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
-            >
-              Next &gt;
-            </button>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-4 w-full">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div
-                key={day}
-                className="flex items-center justify-center font-semibold text-gray-600"
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="absolute top-5 left-5">
+          <HomeButton />
+        </div>
+        <div className="flex items-start justify-center space-x-8">
+          {/* Left: Calendar Grid */}
+          <div className="w-1/2 p-4">
+            <div className="flex justify-between items-center w-full mb-6">
+              <button
+                onClick={goToPreviousMonth}
+                className="px-4 py-2 text-sm text-white glass font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
               >
-                {day}
-              </div>
-            ))}
-            {/* Blank spaces for the first week */}
-            {(() => {
-              const startOfMonth = new Date(currentYear, currentMonth, 1);
-              const startDay = startOfMonth.getDay();
-              const blankSpaces = [];
-              for (let i = 0; i < startDay; i++) {
-                blankSpaces.push(
-                  <div key={`blank-${i}`} className="h-20"></div>
-                );
-              }
-              return blankSpaces;
-            })()}
+                &lt; Previous
+              </button>
+              <span className="text-2xl font-neue text-black font-bold">{`${currentDate.toLocaleString(
+                "default",
+                {
+                  month: "long",
+                }
+              )} ${currentYear}`}</span>
+              <button
+                onClick={goToNextMonth}
+                className="px-4 py-2 text-sm glass text-white font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
+              >
+                Next &gt;
+              </button>
+            </div>
 
-            {/* Days of the current month */}
-            {daysInMonth.map((day) => {
-              const formattedDate = `${(currentMonth + 1)
-                .toString()
-                .padStart(2, "0")}-${day
-                .toString()
-                .padStart(2, "0")}-${currentYear}`;
-
-              return (
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-4 w-full">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div
                   key={day}
-                  className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer ${
-                    selectedDate === formattedDate
-                      ? "glass bg-blue-500 text-white"
-                      : loggedIn && formattedDate === todayDate
-                      ? "bg-green-500 text-white" // Check for today and make it green
-                      : "bg-white border-gray-300 hover:bg-gray-200"
-                  }`}
-                  onClick={() => fetchImageForDay(formattedDate)}
+                  className="flex items-center justify-center font-semibold text-gray-600"
                 >
                   {day}
                 </div>
-              );
-            })}
-          </div>
+              ))}
+              {/* Blank spaces for the first week */}
+              {(() => {
+                const startOfMonth = new Date(currentYear, currentMonth, 1);
+                const startDay = startOfMonth.getDay();
+                const blankSpaces = [];
+                for (let i = 0; i < startDay; i++) {
+                  blankSpaces.push(
+                    <div key={`blank-${i}`} className="h-20"></div>
+                  );
+                }
+                return blankSpaces;
+              })()}
 
-        {/* View All Images Button */}
+              {/* Days of the current month */}
+              {daysInMonth.map((day) => {
+                const formattedDate = `${(currentMonth + 1)
+                  .toString()
+                  .padStart(2, "0")}-${day
+                  .toString()
+                  .padStart(2, "0")}-${currentYear}`;
+                const isLoggedIn = loginStatuses[formattedDate];
+
+                return (
+                  <div
+                    key={day}
+                    className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer ${
+                      selectedDate === formattedDate
+                        ? "glass bg-blue-500 text-white"
+                        : isLoggedIn
+                        ? "bg-green-500 text-white" // Green for logged-in days
+                        : "bg-white border-gray-300 hover:bg-gray-200"
+                    }`}
+                    onClick={() => fetchImageForDay(formattedDate)}
+                  >
+                    {day}
+                  </div>
+                );
+              })}
+            </div>
+            {/* View All Images Button */}
           <div className="flex justify-center mt-6">
             <Link to="/gallery" >
                 <button
@@ -179,35 +175,34 @@ const Calendar: React.FC = () => {
                 </button>
             </Link>
             </div>
-        </div>
-        
+          </div>
+          
 
-        {/* Right: Image Viewer */}
-        <div className="w-1/2 p-4">
-          <div className="mockup-phone relative bg-black shadow-2xl">
-            <div className="camera"></div>
-            <div className="display">
-              <div className="artboard artboard-demo phone-1 w-full h-full flex items-center justify-center">
-                {imageURL ? (
-                  <div className="relative w-full h-0 pb-[177.78%] bg-gray-200 rounded-lg overflow-hidden">
-                    <img
-                      src={imageURL}
-                      alt="Daily Image"
-                      className="absolute top-0 left-0 w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <p className="text-center text-lg font-semibold text-gray-500">
-                    No Image Available
-                  </p>
-                )}
+          {/* Right: Image Viewer */}
+          <div className="w-1/2 p-4">
+            <div className="mockup-phone relative bg-black shadow-2xl">
+              <div className="camera"></div>
+              <div className="display">
+                <div className="artboard artboard-demo phone-1 w-full h-full flex items-center justify-center">
+                  {imageURL ? (
+                    <div className="relative w-full h-0 pb-[177.78%] bg-gray-200 rounded-lg overflow-hidden">
+                      <img
+                        src={imageURL}
+                        alt="Daily Image"
+                        className="absolute top-0 left-0 w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-center text-lg font-semibold text-gray-500">
+                      No Image Available
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
     </>
   );
 };
