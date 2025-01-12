@@ -9,7 +9,7 @@ const Gallery: React.FC = () => {
   const { username } = useUser();
   const [images, setImages] = useState<{ src: string, date: string }[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [imagURL, setImageURL] = useState<string | null>(null);
 
   const fetchDataForDay = async (dateString: string) => {
     setSelectedDate(dateString); // Update selected date
