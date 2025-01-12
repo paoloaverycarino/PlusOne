@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from "react";
 
 const Timer: React.FC = () => {
-  const [days, setDays] = useState<number>(0);
+  const [hours, setHours] = useState<number>(0);
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(0);
 
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2025-12-31T23:59:59"); // Target date (end of 2026)
     const now = new Date();
-    const timeDifference = targetDate.getTime() - now.getTime();
-  
+    // Calculate the next midnight (00:00) of the next day
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(24, 0, 0, 0); // Set to midnight of the next day
+
+    const timeDifference = nextMidnight.getTime() - now.getTime();
+
     if (timeDifference > 0) {
-      const remainingDays = Math.floor(timeDifference / (1000 * 3600 * 24));
-      setDays(remainingDays);
+      const remainingHours = Math.floor(timeDifference / (1000 * 3600));
+      const remainingMinutes = Math.floor((timeDifference % (1000 * 3600)) / (1000 * 60));
+      const remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      // Set the remaining time
+      setHours(remainingHours);
+      setMinutes(remainingMinutes);
+      setSeconds(remainingSeconds);
     } else {
-      setDays(0); // If the target date has passed, show 0 days
+      // Reset to 0 if the time difference is negative (shouldn't happen)
+      setHours(0);
+      setMinutes(0);
+      setSeconds(0);
     }
   };
 
@@ -28,15 +42,37 @@ const Timer: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col p-2 bg-white rounded-box text-neutral-content text-center w-[20rem]">
-      <span
-        className="font-neue font-bold text-black text-5xl transition-transform duration-300 ease-in-out transform hover:scale-110"
-      >
-        {days}
-      </span>
-      <span className="text-black font-neue font-medium">days left until Dec 31, 2026</span>
+
+    <div className="flex flex-col justify-center items-center">
+
+      <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+
+            <span className="countdown font-mono text-5xl">
+              <span style={{ "--value": hours } as React.CSSProperties}></span>
+            </span>
+            hours
+          </div>
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+            <span className="countdown font-mono text-5xl">
+              <span style={{ "--value": minutes } as React.CSSProperties}></span>
+            </span>
+            min
+          </div>
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+            <span className="countdown font-mono text-5xl">
+              <span style={{ "--value": seconds } as React.CSSProperties}></span>
+            </span>
+            sec
+          </div>
+      </div>
+
+      <h1 className="text-white font-mono pt-4">
+        Get Your Dailies!
+      </h1>
     </div>
   );
 };
 
 export default Timer;
+
