@@ -76,7 +76,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <body className="bg-white">
+    <body className="bg-black">
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-4">
           <div className="card bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] w-96 shadow-2xl border-4 border-white">
