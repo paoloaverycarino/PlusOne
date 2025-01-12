@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getDocs, collection, doc, getDoc } from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useUser } from "../contexts/UserContext";
 
@@ -8,25 +8,6 @@ const Gallery: React.FC = () => {
   // Fetch 
   const { username } = useUser();
   const [images, setImages] = useState<{ src: string, date: string }[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [imageURL, setImageURL] = useState<string | null>(null);
-
-  const fetchDataForDay = async (dateString: string) => {
-    setSelectedDate(dateString); // Update selected date
-    const docRef = doc(db, `counters/${username}/dailyLogins/${dateString}`);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      if (data && data.imageURL && data.loggedIn) {
-        setImageURL(data.imageURL); // If image URL exists and the boolean is true
-      } else {
-        setImageURL(null); // No image found for this day
-      }
-    } else {
-      setImageURL(null); // No document found for this day
-    }
-  };
 
   useEffect(() => {
     const fetchAllData = async () => {
