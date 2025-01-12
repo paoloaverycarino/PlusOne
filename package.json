@@ -11,6 +11,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
+  "homepage": "https://paoloaverycarino.github.io/PlusOne",
   "dependencies": {
     "firebase": "^11.1.0",
     "gh-pages": "^6.3.0",
