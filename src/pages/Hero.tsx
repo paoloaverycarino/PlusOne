@@ -5,6 +5,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext"; // Import the context
+import CounterButton from "../components/CounterButton";
+import Leaderboard from "../components/Leaderboard";
 
 const Hero: React.FC = () => {
   const [username, setUsernameInput] = useState("");
@@ -76,58 +78,65 @@ const Hero: React.FC = () => {
   };
 
   return (
+
     <body className="bg-black">
+      
       <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="card bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] w-96 shadow-2xl border-4 border-white">
-            <form onSubmit={handleSubmit}>
-              <div className="card-body">
-                <h1 className="font-neue font-bold text-7xl text-white">
-                  PlusOne
-                </h1>
-                <h3 className="font-neue font-light text-sm text-white">
-                  Username
-                </h3>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-xs"
-                  value={username}
-                  onChange={(e) => setUsernameInput(e.target.value)}
-                  required
-                />
-                <h3 className="font-neue font-light text-sm text-white">
-                  Password
-                </h3>
-                <div className="flex relative">
+        <div className="flex flex-row items-center justify-center gap-4">
+          <div className="flex flex-col items-center space-y-4">
+            
+            <div className="card bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] w-96 shadow-2xl border-4 border-white">
+              <form onSubmit={handleSubmit}>
+                <div className="card-body">
+                  <h1 className="font-neue font-bold text-7xl text-white">
+                    PlusOne
+                  </h1>
+                  <h3 className="font-neue font-light text-sm text-white">
+                    Username
+                  </h3>
                   <input
-                    type={passwordVisible ? "text" : "password"}
+                    type="text"
                     placeholder="Type here"
                     className="input input-bordered w-full max-w-xs"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsernameInput(e.target.value)}
                     required
                   />
-                  <button
-                    type="button"
-                    className="btn btn-xs absolute right-2 top-3 border border-[#A0E5EA]"
-                    onClick={() => setPasswordVisible(!passwordVisible)}
-                  >
-                    {passwordVisible ? "Hide" : "Show"}
-                  </button>
+                  <h3 className="font-neue font-light text-sm text-white">
+                    Password
+                  </h3>
+                  <div className="flex relative">
+                    <input
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Type here"
+                      className="input input-bordered w-full max-w-xs"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-xs absolute right-2 top-3 border border-[#A0E5EA]"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                    >
+                      {passwordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  <div className="card-actions justify-end"></div>
+                  <button type="submit" className="hidden"></button>
                 </div>
-                <div className="card-actions justify-end"></div>
-                <button type="submit" className="hidden"></button>
-              </div>
-            </form>
+              </form>
+            </div>
+            <div
+              className={`transition-opacity duration-1000 ${
+                showAlert ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <LoginAlert />
+            </div>
           </div>
-          <div
-            className={`transition-opacity duration-1000 ${
-              showAlert ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <LoginAlert />
-          </div>
+
+          {/* <Leaderboard /> */}
         </div>
       </div>
     </body>
