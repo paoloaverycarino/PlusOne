@@ -42,7 +42,6 @@ const Training: React.FC = () => {
 
   // Pagination logic (6 exercises per page)
   const exercisesPerPage = 6;
-  const totalPages = Math.ceil(exercisesForCurrentCategory.length / exercisesPerPage);
 
   // State for pagination (which page is selected)
   const [currentPage, setCurrentPage] = useState(0);
@@ -58,11 +57,6 @@ const Training: React.FC = () => {
     currentPage * exercisesPerPage,
     (currentPage + 1) * exercisesPerPage
   );
-
-  // Function to handle the change of radio button selection
-  const handleRadioChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center min-h-screen">
