@@ -18,6 +18,7 @@ const User: React.FC = () => {
               
               <div className="stats shadow col-span-1 row-span-2">
                 <div className="card bg-gradient-to-b from-[#ffffff] to-[#9cf2f8]">
+                  <UploadToday />
                 </div>
               </div>
 
