@@ -48,6 +48,7 @@ const ContributionGraph: React.FC = () => {
   };
 
   return (
+
     <div className="w-full p-4 bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] rounded-lg shadow-2xl overflow-x-hidden">
       <div className="flex justify-between items-center mb-6">
         <button
@@ -64,7 +65,6 @@ const ContributionGraph: React.FC = () => {
           &gt;
         </button>
       </div>
-  
       {/* Displaying each month in a 2-column grid for mobile and 6-column grid for larger screens */}
       <div className="grid grid-cols-2 grid-rows-6 sm:grid-cols-6 sm:grid-rows-2 gap-4 p-2">
         {months.map((month, monthIndex) => {
@@ -97,8 +97,9 @@ const ContributionGraph: React.FC = () => {
                 {emptySpaces.map((_, index) => (
                   <div key={index} className="w-5 h-5"></div>
                 ))}
-  
+                
                 {/* Days in the current month as small squares */}
+
                 {daysInMonth.map((_, dayIndex) => {
                   const dayDate = new Date(
                     month.getFullYear(),
