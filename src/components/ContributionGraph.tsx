@@ -1,7 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../services/firebase"; // Path to your Firebase config
+import { doc, onSnapshot } from "firebase/firestore";
+import { useUser } from "../contexts/UserContext";
 
 const ContributionGraph: React.FC = () => {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    const [loggedIn, setLoggedIn] = useState<boolean>(false); // State to track if the user is logged in
+    const { username } = useUser();
+
+    useEffect(() => {
+      const todayDate = getFormattedDate();
+      const dailyLoginRef = doc(db, `counters/${username}/dailyLogins/${todayDate}`);
+  
+      const unsubscribe = onSnapshot(dailyLoginRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setLoggedIn(data?.loggedIn || false);
+        }
+      });
+  
+      // Cleanup the listener when the component is unmounted
+      return () => unsubscribe();
+    }, [username]);
+  
+    const getFormattedDate = () => {
+      const today = new Date();
+      return `${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
+        .getDate()
+        .toString()
+        .padStart(2, "0")}-${today.getFullYear()}`;
+    };
 
     // Get the current year and months
     const currentYear = currentDate.getFullYear();
@@ -66,12 +94,28 @@ const ContributionGraph: React.FC = () => {
                   ))}
   
                   {/* Days in the current month as empty squares */}
-                  {daysInMonth.map((_, index) => (
+                  {daysInMonth.map((_, dayIndex) => {
+                  const dayDate = new Date(
+                    month.getFullYear(),
+                    month.getMonth(),
+                    dayIndex + 1
+                  );
+                  const isToday =
+                    dayDate.toDateString() === new Date().toDateString();
+
+                  return (
                     <div
-                      key={index}
-                      className="w-5 h-5 border border-gray-300 bg-white"
+                      key={dayIndex}
+                      className={`w-5 h-5 border ${
+                        isToday
+                          ? loggedIn
+                            ? "bg-green-500"
+                            : "bg-gray-200"
+                          : "bg-white"
+                      }`}
                     />
-                  ))}
+                  );
+                })}
                 </div>
               </div>
             );

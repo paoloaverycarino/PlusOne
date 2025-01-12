@@ -4,19 +4,45 @@ import ContributionGraph from "../components/ContributionGraph";
 import UploadToday from "../components/UploadToday";
 import { Link } from "react-router-dom";
 import { db } from "../services/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useUser } from "../contexts/UserContext";
 
 const User: React.FC = () => {
   const { username } = useUser();
   const [user1Counter, setUser1Counter] = useState<number>(0);
   const [user2Counter, setUser2Counter] = useState<number>(0);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     if (username) {
       getUserCounter();
+      fetchLoggedInStatus();
     }
   }, [username]);
+
+  const fetchLoggedInStatus = () => {
+    const today = new Date();
+    const formattedDate = `${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${today
+      .getDate()
+      .toString()
+      .padStart(2, "0")}-${today.getFullYear()}`;
+
+    const dailyLoginRef = doc(
+      db,
+      `counters/${username}/dailyLogins/${formattedDate}`
+    );
+
+    const unsubscribe = onSnapshot(dailyLoginRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setLoggedIn(data?.loggedIn || false); // Update loggedIn state
+      }
+    });
+
+    return () => unsubscribe();
+  };
 
   const getUserCounter = async () => {
     const user1Ref = doc(db, "counters", "user1"); // Use the username as the document ID
