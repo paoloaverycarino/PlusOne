@@ -18,17 +18,17 @@ const ContributionGraph: React.FC = () => {
     };
   
     return (
-      <div className="w-[100rem] p-4 bg-white rounded-lg shadow-lg">
+      <div className="w-[100rem] p-4 bg-gradient-to-b from-[#df94e5] to-[#e96e35] rounded-lg shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <button
-            className="text-lg font-bold text-gray-600 hover:text-gray-800"
+            className="font-neue font-bold text-9xl text-gray-600 hover:text-gray-800"
             onClick={goToPreviousYear}
           >
             &lt;
           </button>
-          <span className="text-9xl font-bold">{currentYear}</span>
+          <span className="text-9xl text-black font-bold">{currentYear}</span>
           <button
-            className="text-lg font-bold text-gray-600 hover:text-gray-800"
+            className="text-9xl font-bold text-gray-600 hover:text-gray-800"
             onClick={goToNextYear}
           >
             &gt;

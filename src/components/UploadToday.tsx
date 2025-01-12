@@ -1,13 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { storage, db } from "../services/firebase"; // Assuming you have firebase initialized here
 import { useUser } from "../contexts/UserContext";
 
 function UploadToday() {
-    const { username } = useUser();
+  const { username } = useUser();
   const [image, setImage] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Fetch the loggedIn status and imageURL from Firestore
+    const fetchUserData = async () => {
+      try {
+        const dailyLoginRef = doc(db, `counters/${username}/dailyLogins/`);
+        const docSnap = await getDoc(dailyLoginRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setImage(data?.imageURL || null); // Set image URL if exists
+          setLoggedIn(data?.loggedIn || false); // Set loggedIn status
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [username]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -22,8 +41,7 @@ function UploadToday() {
 
   const uploadImageToStorage = async (file: File) => {
     try {
-      setIsUploading(true);
-      const imageRef = ref(storage, `uploads/`);
+      const imageRef = ref(storage, `uploads/${file.name}`);
       await uploadBytes(imageRef, file); // Upload file to Firebase Storage
 
       // Get the download URL of the uploaded image
@@ -31,19 +49,26 @@ function UploadToday() {
 
       // Store the image URL in Firestore
       await storeImageDataInFirestore(downloadUrl);
-      setIsUploading(false);
     } catch (error) {
       console.error("Error uploading image:", error);
-      setIsUploading(false);
     }
   };
 
   const storeImageDataInFirestore = async (imageUrl: string) => {
     try {
-        const today = new Date();
-    const formattedDate = `${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}-${today.getFullYear()}`;
+      const today = new Date();
+      const formattedDate = `${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${today
+        .getDate()
+        .toString()
+        .padStart(2, "0")}-${today.getFullYear()}`;
+      console.log(formattedDate);
 
-      const dailyLoginRef = doc(db, `counters/${username}/dailyLogins/${formattedDate}`);
+      const dailyLoginRef = doc(
+        db,
+        `counters/${username}/dailyLogins/${formattedDate}`
+      );
       await setDoc(dailyLoginRef, { imageURL: imageUrl }, { merge: true }); // Store image URL in Firestore
       console.log("Image URL stored in Firestore successfully!");
     } catch (error) {
@@ -65,15 +90,12 @@ function UploadToday() {
         <div className="flex-grow flex items-center justify-center">
           <p className="text-center font-bold">{image ? "" : "(Empty)"}</p>
         </div>
-        <label className="text-center mb-2 font-bold">
-          Upload of the Day
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleFileChange}
-            disabled={isUploading} // Disable the button while uploading
-          />
-        </label>
+        {loggedIn && image === null && (
+          <label className="text-center mb-2 font-bold">
+            Upload of the Day
+            <input type="file" className="hidden" onChange={handleFileChange} />
+          </label>
+        )}
       </div>
     </>
   );
