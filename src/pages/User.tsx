@@ -80,7 +80,7 @@ const isUser1 = username === "user1";
               <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
                 <div className="card-body items-center flex-col justify-between h-full text-center">
                   <h1 className="card-title font-neue font-bold text-8xl text-white">Total</h1>
-                  <h1 className="card-title font-neue font-bold text-[12rem] text-white">{user1Counter}</h1>
+                  <h1 className="card-title font-neue font-bold text-[10rem] text-white">{user1Counter}</h1>
                   <div className="card-actions">
                     <CounterButton currentCounter={user1Counter} onCounterUpdate={handleUser1CounterUpdate}/>
                   </div>
@@ -89,9 +89,9 @@ const isUser1 = username === "user1";
               <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
                 <div className="card-body items-center flex-col justify-between h-full text-center">
                   <h1 className="card-title font-neue font-bold text-8xl text-white">Total</h1>
-                  <h1 className="card-title font-neue font-bold text-[12rem] text-white">{user2Counter}</h1>
+                  <h1 className="card-title font-neue font-bold text-[10rem] text-white pb-10">{user2Counter}</h1>
                   <div className="card-actions">
-                    <CounterButton currentCounter={user2Counter} onCounterUpdate={handleUser2CounterUpdate}/>
+                  <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">+1</button>
                   </div>
                 </div>
               </div>
@@ -102,18 +102,18 @@ const isUser1 = username === "user1";
               <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
                 <div className="card-body items-center flex-col justify-between h-full text-center">
                   <h1 className="card-title font-neue font-bold text-8xl text-white">Total</h1>
-                  <h1 className="card-title font-neue font-bold text-[12rem] text-white">{user2Counter}</h1>
+                  <h1 className="card-title font-neue font-bold text-[10rem] text-white">{user2Counter}</h1>
                   <div className="card-actions">
                     <CounterButton currentCounter={user2Counter} onCounterUpdate={handleUser2CounterUpdate}/>
                   </div>
                 </div>
               </div>
-              <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
+              <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl ">
                 <div className="card-body items-center flex-col justify-between h-full text-center">
                   <h1 className="card-title font-neue font-bold text-8xl text-white">Total</h1>
-                  <h1 className="card-title font-neue font-bold text-[12rem] text-white">{user1Counter}</h1>
+                  <h1 className="card-title font-neue font-bold text-[10rem] text-white ">{user1Counter}</h1>
                   <div className="card-actions">
-                    <CounterButton currentCounter={user1Counter} onCounterUpdate={handleUser1CounterUpdate}/>
+                    <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">+1</button>
                   </div>
                 </div>
               </div>
