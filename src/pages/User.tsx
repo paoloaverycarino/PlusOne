@@ -5,7 +5,7 @@ import UploadToday from "../components/UploadToday";
 
 const User: React.FC = () => {
   return (
-    <body className="flex flex-col items-center justify-center min-h-screen bg-white">
+    <body className="flex flex-col items-center justify-center min-h-screen bg-white pt-40">
       <div className="flex gap-4 mb-4"> {/* Adds margin to separate the new card */}
 
         <div className="card bg-black w-[32rem] h-[32rem] shadow-2xl">
@@ -47,7 +47,6 @@ const User: React.FC = () => {
             </div>
           </div>
         </div>
-
         <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
           <div className="card-body items-center flex-col justify-between h-full text-center">
             <h1 className="card-title font-neue font-bold text-8xl text-white">
@@ -62,9 +61,9 @@ const User: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* New Long Card Underneath */}
-      <ContributionGraph />
+      <div>
+        <ContributionGraph />
+        </div>
     </body>
   );
 };

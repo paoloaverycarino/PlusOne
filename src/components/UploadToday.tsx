@@ -17,7 +17,7 @@ function UploadToday() {
         className="rounded-2xl border border-black flex flex-col justify-between min-h-full"
         style={{
           backgroundImage: `url(${image})`,
-          backgroundSize: "contain",
+          backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
