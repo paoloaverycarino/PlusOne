@@ -6,8 +6,9 @@ import UploadToday from "../components/UploadToday";
 const User: React.FC = () => {
   return (
 
-    <body className="flex flex-col items-center justify-center min-h-screen bg-white pt-40">
-      <div className="flex gap-4 mb-4"> {/* Adds margin to separate the new card */}
+    <body className="flex flex-col items-center justify-center min-h-screen bg-white">
+      <div className="h-screen flex items-center justify-center">
+      <div className="flex gap-6 mb-4"> {/* Adds margin to separate the new card */}
         <div className="card bg-black w-[32rem] h-[32rem] shadow-2xl">
           <div className="card-body flex flex-col items-center space-y-4 text-center">
 
@@ -23,20 +24,19 @@ const User: React.FC = () => {
               </div>
 
 
-                <div className="stat flex items-center justify-center bg-gradient-to-b from-[#ffffff] to-[#A0E5EA]">
+                <div className="stat flex items-center justify-center rounded-md bg-gradient-to-b from-[#ffffff] to-[#A0E5EA] transform transition-all duration-300 ease-in-out hover:scale-105">
                     <div className="stat-title font-neue font-bold text-black">Calendar Gallery</div>
 
               </div>
 
-              <div className="stats shadow">
-                <div className="stat flex items-center justify-center bg-gradient-to-b from-[#ffffff] to-[#A0E5EA]">
+                <div className="stat flex items-center justify-center rounded-md bg-gradient-to-b from-[#ffffff] to-[#A0E5EA] transform transition-all duration-300 ease-in-out hover:scale-105">
                     <div className="stat-title font-neue font-bold text-black">Training Regime</div>
                 </div>
-              </div>
 
             </div>
           </div>
         </div>
+
         {/* Card 1 - Total */}
         <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
           <div className="card-body items-center flex-col justify-between h-full text-center">
@@ -47,6 +47,7 @@ const User: React.FC = () => {
             </div>
           </div>
         </div>
+
         <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
           <div className="card-body items-center flex-col justify-between h-full text-center">
             <h1 className="card-title font-neue font-bold text-8xl text-white">
@@ -61,9 +62,12 @@ const User: React.FC = () => {
           </div>
         </div>
       </div>
-      <div>
+    </div>
+
+      <div className="h-screen flex justify-center items-center">
         <ContributionGraph />
-        </div>
+      </div>
+
     </body>
   );
 };
