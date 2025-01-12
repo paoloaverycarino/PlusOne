@@ -2,7 +2,8 @@
   "name": "plusone",
   "private": true,
   "version": "0.0.0",
-  "type": "module",  "scripts": {
+  "type": "module",
+  "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -13,6 +14,7 @@
   "dependencies": {
     "firebase": "^11.1.0",
     "gh-pages": "^6.3.0",
+    "heic2any": "^0.0.4",
     "postcss-import": "^16.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
