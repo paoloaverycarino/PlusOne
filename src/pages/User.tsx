@@ -81,15 +81,13 @@ const User: React.FC = () => {
   const isUser1 = username === "user1";
 
   return (
-    <body className="flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="h-[90vh] flex items-center justify-center">
-        <div className="flex gap-6 mb-4">
-      
-
+        <div className="flex flex-col lg:flex-row items-center gap-6 mb-4">
           {/* Progress Card  */}
-          <div className="card bg-black w-[32rem] h-[32rem] shadow-2xl">
+          <div className="card bg-black w-[20rem] h-[20rem] lg:w-[32rem] lg:h-[32rem] shadow-2xl">
             <div className="card-body flex flex-col items-center space-y-4 text-center">
-              <h1 className="card-title font-neue font-bold text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#FED90B] to-[#FF8C00] leading-[1.2]">
+              <h1 className="card-title font-neue font-bold text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#FED90B] to-[#FF8C00] leading-[1.2] hidden lg:flex">
                 Progress
               </h1>
               <div className="grid grid-cols-2 grid-rows-2 gap-6 w-full h-full">
@@ -103,7 +101,7 @@ const User: React.FC = () => {
                     to="/calendar"
                     className="w-full h-full flex items-center justify-center"
                   >
-                    <div className="stat-title font-neue font-bold text-black">
+                    <div className="stat-title font-neue font-bold text-black text text-sm lg:text-base">
                       Calendar Gallery
                     </div>
                   </Link>
@@ -113,7 +111,7 @@ const User: React.FC = () => {
                     to="/training"
                     className="w-full h-full flex items-center justify-center"
                   >
-                    <div className="stat-title font-neue font-bold text-black">
+                    <div className="stat-title font-neue font-bold text-black text-sm lg:text-base">
                       Training Regime
                     </div>
                   </Link>
@@ -122,93 +120,94 @@ const User: React.FC = () => {
             </div>
           </div>
 
-{/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-
-          {/* Conditional layout based on user */}
-          {isUser1 ? (
-            <>
-              {/* User 1 Counter on the Left */}
-              <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl">
-                <div className="card-body items-center flex-col justify-between h-full text-center">
-                  <div>
-                  <h1 className="card-title font-neue font-bold text-8xl text-white">
-                    Total
-                  </h1>
-                  </div>
-                  <h1 className="card-title font-neue font-bold text-[10rem] text-white">
-                    {user1Counter}
-                  </h1>
-                  <div className="card-actions">
-                    <CounterButton
-                      currentCounter={user1Counter}
-                      onCounterUpdate={handleUser1CounterUpdate}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
-                <div className="card-body items-center flex-col justify-between h-full text-center">
-                  <h1 className="card-title font-neue font-bold text-8xl text-white">
-                    Total
-                  </h1>
-                  <h1 className="card-title font-neue font-bold text-[10rem] text-white">
-                    {user2Counter}
-                  </h1>
-                  <div className="card-actions">
-                    <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                      {user2LoggedIn
-                        ? "Andy went to the gym!"
-                        : "Andy has not gone to the gym!"}
-                    </button>
+          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+          <div className="flex gap-5">
+            {/* Conditional layout based on user */}
+            {isUser1 ? (
+              <>
+                {/* User 1 Counter on the Left */}
+                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                  <div className="card-body items-center flex-col justify-between h-full text-center">
+                    <div>
+                      <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                        Total
+                      </h1>
+                    </div>
+                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white">
+                      {user1Counter}
+                    </h1>
+                    <div className="card-actions">
+                      <CounterButton
+                        currentCounter={user1Counter}
+                        onCounterUpdate={handleUser1CounterUpdate}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* User 2 Counter on the Left */}
-              <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl">
-                <div className="card-body items-center flex-col justify-between h-full text-center">
-                  <h1 className="card-title font-neue font-bold text-8xl text-white">
-                    Total
-                  </h1>
-                  <h1 className="card-title font-neue font-bold text-[10rem] text-white">
-                    {user2Counter}
-                  </h1>
-                  <div className="card-actions">
-                    <CounterButton
-                      currentCounter={user2Counter}
-                      onCounterUpdate={handleUser2CounterUpdate}
-                    />
+                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                  <div className="card-body items-center flex-col justify-between h-full text-center">
+                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                      Total
+                    </h1>
+                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white pb-11 lg:pb-0 text-white">
+                      {user2Counter}
+                    </h1>
+                    <div className="card-actions">
+                      <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
+                        {user2LoggedIn
+                          ? "Andy went to the gym!"
+                          : "Andy has not gone to the gym!"}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl ">
-                <div className="card-body items-center flex-col justify-between h-full text-center">
-                  <h1 className="card-title font-neue font-bold text-8xl text-white">
-                    Total
-                  </h1>
-                  <h1 className="card-title font-neue font-bold text-[10rem] text-white ">
-                    {user1Counter}
-                  </h1>
-                  <div className="card-actions">
-                    <button className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                      {user1LoggedIn
-                        ? "Paolo went to the gym!"
-                        : "Paolo has not gone to the gym!"}
-                    </button>
+              </>
+            ) : (
+              <>
+                {/* User 2 Counter on the Left */}
+                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                  <div className="card-body items-center flex-col justify-between h-full text-center">
+                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                      Total
+                    </h1>
+                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white">
+                      {user2Counter}
+                    </h1>
+                    <div className="card-actions">
+                      <CounterButton
+                        currentCounter={user2Counter}
+                        onCounterUpdate={handleUser2CounterUpdate}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
-          )}
+                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl w-36 lg:w-max h-[250px] lg:h-auto">
+                  <div className="card-body items-center flex-col justify-between h-full text-center">
+                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                      Total
+                    </h1>
+                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white pb-11 lg:pb-0">
+                      {user1Counter}
+                    </h1>
+                    <div className="card-actions">
+                      <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                        {user1LoggedIn
+                          ? "Paolo went to the gym!"
+                          : "Paolo has not gone to the gym!"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="h-screen flex justify-center items-center">
+      <div className="h-screen flex justify-center items-center hidden lg:flex">
         <ContributionGraph />
       </div>
-    </body>
+    </div>
   );
 };
 

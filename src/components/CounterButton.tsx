@@ -82,7 +82,7 @@ const CounterButton: React.FC<CounterButtonProps> = ({
   return (
     <>
       <button
-        className="font-neue btn btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+        className="font-neue btn btn-block lg:btn-wide bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
         onClick={handleIncrementCounter}
         disabled={loggedIn} // Disable the button if loggedIn is true
       >

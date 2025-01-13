@@ -48,7 +48,6 @@ const ContributionGraph: React.FC = () => {
   };
 
   return (
-
     <div className="w-full p-4 bg-gradient-to-b from-[#A0E5EA] to-[#84DB6E] rounded-lg shadow-2xl overflow-x-hidden">
       <div className="flex justify-between items-center mb-6">
         <button
@@ -81,25 +80,24 @@ const ContributionGraph: React.FC = () => {
   
           return (
             <div
-              key={monthIndex}
+              key={`${month.getFullYear()}-${month.getMonth()}`} // Ensure this key is unique for each month
               className="w-full p-4 bg-white border rounded-lg shadow-sm"
             >
               <h3 className="text-center font-semibold mb-2">{month.toLocaleString("default", { month: "long" })}</h3>
               <div className="grid grid-cols-7 gap-1 text-center">
                 {/* Shortened day labels (MTWTFSS) */}
-                {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
-                  <div key={day} className="font-semibold text-gray-600 text-xs">
+                {["M", "T", "W", "T", "F", "S", "S"].map((day, dayIndex) => (
+                  <div key={`day-label-${dayIndex}`} className="font-semibold text-gray-600 text-xs">
                     {day}
                   </div>
                 ))}
   
                 {/* Empty spaces before the first day of the month */}
                 {emptySpaces.map((_, index) => (
-                  <div key={index} className="w-5 h-5"></div>
+                  <div key={`empty-${monthIndex}-${index}`} className="w-5 h-5"></div>
                 ))}
                 
                 {/* Days in the current month as small squares */}
-
                 {daysInMonth.map((_, dayIndex) => {
                   const dayDate = new Date(
                     month.getFullYear(),
@@ -110,7 +108,7 @@ const ContributionGraph: React.FC = () => {
   
                   return (
                     <div
-                      key={dayIndex}
+                      key={`day-${month.getFullYear()}-${month.getMonth()}-${dayIndex}`} // Unique key for each day
                       className={`w-5 h-5 border ${
                         loggedInDays.has(formattedDate)
                           ? "bg-green-500"
@@ -126,7 +124,6 @@ const ContributionGraph: React.FC = () => {
       </div>
     </div>
   );
-
 };
 
 export default ContributionGraph;
