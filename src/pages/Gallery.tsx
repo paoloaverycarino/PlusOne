@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { getDocs, collection } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useUser } from "../contexts/UserContext";
+import HomeButton from "../components/HomeButton";
 
 const Gallery: React.FC = () => {
-
-  // Fetch 
+  // Fetch
   const { username } = useUser();
-  const [images, setImages] = useState<{ src: string, date: string }[]>([]);
+  const [images, setImages] = useState<{ src: string; date: string }[]>([]);
 
   useEffect(() => {
     const fetchAllData = async () => {
-      const imagesArray: { src: string, date: string }[] = [];
-      const querySnapshot = await getDocs(collection(db, `counters/${username}/dailyLogins`));
+      const imagesArray: { src: string; date: string }[] = [];
+      const querySnapshot = await getDocs(
+        collection(db, `counters/${username}/dailyLogins`)
+      );
 
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data();
@@ -56,14 +58,19 @@ const Gallery: React.FC = () => {
 
   return (
     <div className="bg-black min-h-screen p-4">
-      <div className="flex justify-center text-center pt-6 h-[35vh]">
-        <h1 className="text-[12rem] font-neue text-white font-semibold text-center mb-4">Gallery</h1>
+      <div className="absolute top-5 left-5">
+        <HomeButton />
+      </div>
+      <div className="flex justify-center text-center pt-6 h-[20vh] lg:h-[35vh]">
+        <h1 className="text-[6rem] lg:text-[12rem] font-neue text-white font-semibold text-center mb-4">
+          Gallery
+        </h1>
       </div>
 
-      <div className="grid grid-cols-6 gap-8">
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-8">
         {images.map((image, index) => {
           const columnIndex = index % 6;
-          const offset = columnOffsets[columnIndex % 2]; 
+          const offset = columnOffsets[columnIndex % 2];
 
           return (
             <div
@@ -95,7 +102,9 @@ const Gallery: React.FC = () => {
               alt="Enlarged Image"
               className="max-w-full max-h-[80vh] object-contain rounded-lg"
             />
-            <div className="text-center text-4xl font-neue text-white mt-4">{modalDate}</div>
+            <div className="text-center text-4xl font-neue text-white mt-4">
+              {modalDate}
+            </div>
           </div>
         </div>
       )}
@@ -104,4 +113,3 @@ const Gallery: React.FC = () => {
 };
 
 export default Gallery;
-

@@ -9,6 +9,9 @@ export default {
       fontFamily: {
         neue: ['NeueMontreal', 'sans-serif'], // Custom font family name and fallback
       },
+      daisyui: {
+        themes: ["light"],
+      }
     },
   },
   plugins: [
