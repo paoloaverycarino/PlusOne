@@ -126,7 +126,7 @@ const User: React.FC = () => {
             {isUser1 ? (
               <>
                 {/* User 1 Counter on the Left */}
-                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
                   <div className="card-body items-center flex-col justify-between h-full text-center">
                     <div>
                       <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
@@ -144,7 +144,7 @@ const User: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
                   <div className="card-body items-center flex-col justify-between h-full text-center">
                     <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
                       Total
@@ -165,7 +165,7 @@ const User: React.FC = () => {
             ) : (
               <>
                 {/* User 2 Counter on the Left */}
-                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl w-36 lg:w-max h-[250px] lg:h-[515px]">
+                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
                   <div className="card-body items-center flex-col justify-between h-full text-center">
                     <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
                       Total
@@ -181,7 +181,7 @@ const User: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl w-36 lg:w-max h-[250px] lg:h-auto">
+                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl w-full lg:w-max h-[250px] lg:h-auto">
                   <div className="card-body items-center flex-col justify-between h-full text-center">
                     <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
                       Total
