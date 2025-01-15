@@ -80,7 +80,7 @@ const Hero: React.FC = () => {
 
   return (
 
-    <body className="bg-black">
+    <div className="bg-black">
       
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-row items-center justify-center gap-2">
@@ -137,10 +137,9 @@ const Hero: React.FC = () => {
             </div>
 
           </div>
-              {/* for if you want something beside the login */}
         </div>
       </div>
-    </body>
+    </div>
   );
 };
 

@@ -105,11 +105,11 @@ const Calendar: React.FC = () => {
         </div>
         <div className="flex items-start justify-center space-x-8">
           {/* Left: Calendar Grid */}
-          <div className="w-1/2 p-4 border">
+          <div className="w-3/4 lg:w-1/2 p-4 border">
             <div className="flex justify-between items-center w-full mb-6">
               <button
                 onClick={goToPreviousMonth}
-                className="px-4 py-2 text-sm text-white glass font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
+                className="scale-75 lg:scale-100 px-4 py-2 text-sm text-white glass font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
               >
                 &lt; Previous
               </button>
@@ -121,7 +121,7 @@ const Calendar: React.FC = () => {
               )} ${currentYear}`}</span>
               <button
                 onClick={goToNextMonth}
-                className="px-4 py-2 text-sm glass text-white font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
+                className="scale-75 lg:scale-100 px-4 py-2 text-sm glass text-white font-bold bg-blue-500 rounded-lg hover:bg-blue-600"
               >
                 Next &gt;
               </button>
@@ -129,25 +129,21 @@ const Calendar: React.FC = () => {
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-4 w-full">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                (day) => (
-                  <div
-                    key={day}
-                    className="flex items-center justify-center font-semibold text-gray-600"
-                  >
-                    {day}
-                  </div>
-                )
-              )}
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <div
+                  key={day}
+                  className="flex items-center justify-center font-semibold text-gray-600"
+                >
+                  {day}
+                </div>
+              ))}
               {/* Blank spaces for the first week */}
               {(() => {
                 const startOfMonth = new Date(currentYear, currentMonth, 1);
                 const startDay = startOfMonth.getDay();
                 const blankSpaces = [];
                 for (let i = 0; i < startDay; i++) {
-                  blankSpaces.push(
-                    <div key={`blank-${i}`} className="h-20"></div>
-                  );
+                  blankSpaces.push(<div key={`blank-${i}`}></div>);
                 }
                 return blankSpaces;
               })()}
@@ -164,7 +160,7 @@ const Calendar: React.FC = () => {
                 return (
                   <div
                     key={day}
-                    className={`w-16 h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-300 ease-in-out ${
+                    className={`w-10 lg:w-16 h-10 lg:h-16 border-2 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-300 ease-in-out ${
                       selectedDate === formattedDate
                         ? "glass bg-blue-500 text-white"
                         : isLoggedIn
@@ -193,7 +189,7 @@ const Calendar: React.FC = () => {
           </div>
 
           {/* Right: Image Viewer */}
-          <div className="w-1/2 p-4">
+          <div className="w-1/2 p-4 hidden lg:block">
             <div className="mockup-phone relative bg-black shadow-2xl">
               <div className="camera"></div>
               <div className="display">
@@ -218,12 +214,12 @@ const Calendar: React.FC = () => {
         </div>
       </div>
 
-        {/* Show the loading spinner while data is loading */}
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-white z-50 scale-150">
-            <LoadingSpinner />
-          </div>
-        )}
+      {/* Show the loading spinner while data is loading */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-white z-50 scale-150">
+          <LoadingSpinner />
+        </div>
+      )}
     </>
   );
 };
