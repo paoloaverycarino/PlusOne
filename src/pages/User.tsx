@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CounterButton from "../components/CounterButton";
 import ContributionGraph from "../components/ContributionGraph";
 import UploadToday from "../components/UploadToday";
+import UserSelect from "../components/UserSelect";
 import { Link } from "react-router-dom";
 import { db } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -9,19 +10,28 @@ import { useUser } from "../contexts/UserContext";
 
 const User: React.FC = () => {
   const { username } = useUser();
-  const [user1Counter, setUser1Counter] = useState<number>(0);
-  const [user2Counter, setUser2Counter] = useState<number>(0);
-  const [user1LoggedIn, setUser1LoggedIn] = useState<boolean>(false);
-  const [user2LoggedIn, setUser2LoggedIn] = useState<boolean>(false);
+  const [userCounter, setUserCounter] = useState<number>(0); // Store the logged-in user counter
+  const [selectedUserCounter, setSelectedUserCounter] = useState<number>(0); // Store the selected user's counter
+  const [selectedUserLoggedInStatus, setSelectedUserLoggedInStatus] =
+    useState<boolean>(false); // Logged-in status of selected user
+  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedUserUsername, setSelectedUserUsername] = useState<string>("");
 
   useEffect(() => {
     if (username) {
-      getUserCounter();
-      fetchLoggedInStatus();
+      getUserCounter(username); // Fetch counter for logged-in user
     }
   }, [username]);
 
-  const fetchLoggedInStatus = async () => {
+  useEffect(() => {
+    if (selectedUser) {
+      getUserCounter(selectedUser); // Fetch counter for selected user
+      fetchLoggedInStatus(selectedUser); // Fetch logged-in status for selected user
+      fetchSelectedUserUsername(selectedUser); // Fetch username for selected user
+    }
+  }, [selectedUser]);
+
+  const fetchLoggedInStatus = async (user: string) => {
     const today = new Date();
     const formattedDate = `${(today.getMonth() + 1)
       .toString()
@@ -30,58 +40,52 @@ const User: React.FC = () => {
       .toString()
       .padStart(2, "0")}-${today.getFullYear()}`;
 
-    const user1LoginRef = doc(
+    const userLoginRef = doc(
       db,
-      `counters/user1/dailyLogins/${formattedDate}`
-    );
-    const user2LoginRef = doc(
-      db,
-      `counters/user2/dailyLogins/${formattedDate}`
+      `counters/${user}/dailyLogins/${formattedDate}`
     );
 
     try {
-      const user1LoginSnap = await getDoc(user1LoginRef);
-      const user2LoginSnap = await getDoc(user2LoginRef);
-
-      if (user1LoginSnap.exists()) {
-        setUser1LoggedIn(user1LoginSnap.data().loggedIn || false);
-      }
-      if (user2LoginSnap.exists()) {
-        setUser2LoggedIn(user2LoginSnap.data().loggedIn || false);
+      const userLoginSnap = await getDoc(userLoginRef);
+      if (userLoginSnap.exists()) {
+        console.log("Fetched user login status:", userLoginSnap.data());
+        setSelectedUserLoggedInStatus(userLoginSnap.data().loggedIn || false);
+      } else {
+        console.log(
+          `No login data found for ${user} on ${formattedDate}. Setting loggedInStatus to false.`
+        );
+        setSelectedUserLoggedInStatus(false); // No data found, set to false
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching logged-in status:", error);
     }
   };
 
-  const getUserCounter = async () => {
-    const user1Ref = doc(db, "counters", "user1"); // Use the username as the document ID
-    const user2Ref = doc(db, "counters", "user2"); // Use the username as the document ID
+  const fetchSelectedUserUsername = async (userId: string) => {
+    const userRef = doc(db, "counters", userId); // Fetch the document of the selected user
+    const userSnap = await getDoc(userRef);
 
-    const user1Snap = await getDoc(user1Ref);
-    const user2Snap = await getDoc(user2Ref);
-
-    if (user1Snap.exists()) {
-      setUser1Counter(user1Snap.data().counter || 0); // Set the counter state with the value from Firestore
-    }
-
-    if (user2Snap.exists()) {
-      setUser2Counter(user2Snap.data().counter || 0); // Set the counter state with the value from Firestore
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      setSelectedUserUsername(userData?.username || "Unknown User");
     }
   };
 
-  const handleUser1CounterUpdate = (newCounter: number) => {
-    setUser1Counter(newCounter); // Update the local state in User component when the counter changes
-  };
+  const getUserCounter = async (user: string) => {
+    const userRef = doc(db, "counters", user); // Use the username as the document ID
+    const userSnap = await getDoc(userRef);
 
-  const handleUser2CounterUpdate = (newCounter: number) => {
-    setUser2Counter(newCounter); // Update the local state in User component when the counter changes
+    if (userSnap.exists()) {
+      if (user === username) {
+        setUserCounter(userSnap.data().counter || 0); // Set the logged-in user's counter
+      } else {
+        setSelectedUserCounter(userSnap.data().counter || 0); // Set the selected user's counter
+      }
+    }
   };
-
-  const isUser1 = username === "user1";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white overflow-hidden">
       <div className="h-[90vh] flex items-center justify-center">
         <div className="flex flex-col lg:flex-row items-center gap-6 mb-4">
           {/* Progress Card  */}
@@ -120,86 +124,51 @@ const User: React.FC = () => {
             </div>
           </div>
 
-          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
           <div className="flex gap-5">
-            {/* Conditional layout based on user */}
-            {isUser1 ? (
-              <>
-                {/* User 1 Counter on the Left */}
-                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
-                  <div className="card-body items-center flex-col justify-between h-full text-center">
-                    <div>
-                      <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
-                        Total
-                      </h1>
-                    </div>
-                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white">
-                      {user1Counter}
-                    </h1>
-                    <div className="card-actions">
-                      <CounterButton
-                        currentCounter={user1Counter}
-                        onCounterUpdate={handleUser1CounterUpdate}
-                      />
-                    </div>
-                  </div>
+            {/* Left Counter (Logged-in User) */}
+            <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
+              <div className="card-body items-center flex-col justify-between h-full text-center">
+                <div>
+                  <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                    Total
+                  </h1>
                 </div>
-                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
-                  <div className="card-body items-center flex-col justify-between h-full text-center">
-                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
-                      Total
-                    </h1>
-                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white pb-11 lg:pb-0 text-white">
-                      {user2Counter}
-                    </h1>
-                    <div className="card-actions">
-                      <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                        {user2LoggedIn
-                          ? "Andy went to the gym!"
-                          : "Andy has not gone to the gym!"}
-                      </button>
-                    </div>
-                  </div>
+                <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white">
+                  {userCounter}
+                </h1>
+                <div className="card-actions">
+                  <CounterButton
+                    currentCounter={userCounter}
+                    onCounterUpdate={(newCounter) => setUserCounter(newCounter)}
+                  />
                 </div>
-              </>
-            ) : (
-              <>
-                {/* User 2 Counter on the Left */}
-                <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] w-80 shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
-                  <div className="card-body items-center flex-col justify-between h-full text-center">
-                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
-                      Total
-                    </h1>
-                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white">
-                      {user2Counter}
-                    </h1>
-                    <div className="card-actions">
-                      <CounterButton
-                        currentCounter={user2Counter}
-                        onCounterUpdate={handleUser2CounterUpdate}
-                      />
-                    </div>
-                  </div>
+              </div>
+            </div>
+
+            {/* Right Counter (Selected User) */}
+            <div className="card glass bg-gradient-to-b from-[#ED373A] to-[#6929A1] shadow-2xl w-full lg:w-max h-[250px] lg:h-[515px]">
+              <div className="card-body items-center flex-col justify-between h-full text-center">
+                <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
+                  Total
+                </h1>
+                <div className="flex flex-col justify-between items-center h-full">
+                  <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white pt-7 lg:pt-32 pb-11 lg:pb-0 text-white">
+                    {selectedUserCounter}
+                  </h1>
+                  <UserSelect
+                    selectedUser={selectedUser}
+                    setSelectedUser={setSelectedUser}
+                  />
                 </div>
-                <div className="card glass bg-gradient-to-b from-[#7691CB] to-[#45FFF0] w-80 shadow-2xl w-full lg:w-max h-[250px] lg:h-auto">
-                  <div className="card-body items-center flex-col justify-between h-full text-center">
-                    <h1 className="card-title font-neue font-bold text-3xl lg:text-8xl text-white">
-                      Total
-                    </h1>
-                    <h1 className="card-title font-neue font-bold text-[3rem] lg:text-[10rem] text-white pb-11 lg:pb-0">
-                      {user1Counter}
-                    </h1>
-                    <div className="card-actions">
-                      <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
-                        {user1LoggedIn
-                          ? "Paolo went to the gym!"
-                          : "Paolo has not gone to the gym!"}
-                      </button>
-                    </div>
-                  </div>
+                <div className="card-actions">
+                  <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
+                    {selectedUserLoggedInStatus
+                      ? `${selectedUserUsername} went to the gym!`
+                      : `${selectedUserUsername} has not gone to the gym!`}
+                  </button>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

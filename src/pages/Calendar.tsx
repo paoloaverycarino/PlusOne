@@ -164,8 +164,8 @@ const Calendar: React.FC = () => {
                       selectedDate === formattedDate
                         ? "glass bg-blue-500 text-white"
                         : isLoggedIn
-                        ? "bg-green-500 text-white" // Green for logged-in days
-                        : "bg-white border-gray-300 hover:bg-gray-200"
+                          ? "bg-green-500 text-white" // Green for logged-in days
+                          : "bg-white border-gray-300 hover:bg-gray-200"
                     }`}
                     onClick={() => fetchImageForDay(formattedDate)}
                   >
