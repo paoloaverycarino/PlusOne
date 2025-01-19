@@ -87,7 +87,7 @@ const User: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white overflow-hidden">
       <div className="h-[90vh] flex items-center justify-center">
-        <div className="flex flex-col lg:flex-row items-center gap-6 mb-4">
+        <div className="flex flex-col lg:flex-row items-center gap-6">
           {/* Progress Card  */}
           <div className="card bg-black w-[20rem] h-[20rem] lg:w-[32rem] lg:h-[32rem] shadow-2xl">
             <div className="card-body flex flex-col items-center space-y-4 text-center">
@@ -162,9 +162,11 @@ const User: React.FC = () => {
                 </div>
                 <div className="card-actions">
                   <button className="font-neue btn btn-wide hidden lg:block bg-white bg-opacity-20 backdrop-blur-lg text-white font-bold py-2 px-6 rounded-lg shadow-lg border-2 border-white hover:bg-opacity-40 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 opacity-1">
-                    {selectedUserLoggedInStatus
-                      ? `${selectedUserUsername} went to the gym!`
-                      : `${selectedUserUsername} has not gone to the gym!`}
+                    {!selectedUser
+                      ? "Please select a user"
+                      : selectedUserLoggedInStatus
+                        ? `${selectedUserUsername} went to the gym!`
+                        : `${selectedUserUsername} has not gone to the gym!`}
                   </button>
                 </div>
               </div>
