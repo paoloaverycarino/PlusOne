@@ -35,7 +35,9 @@ const exercises: Exercises = {
 
 const Training: React.FC = () => {
   // State for tracking selected category (Leg Push or Pull)
-  const [currentCategory, setCurrentCategory] = useState<"legPush" | "legPull">("legPush");
+  const [currentCategory, setCurrentCategory] = useState<"legPush" | "legPull">(
+    "legPush"
+  );
 
   // Select exercises for the current category
   const exercisesForCurrentCategory = exercises[currentCategory];
@@ -61,7 +63,7 @@ const Training: React.FC = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-8xl font-bold mb-10">Training Regime</h1>
-  
+
       {/* Replace button with menu for switching categories */}
       <ul className="menu menu-horizontal flex items-center justify-center w-[500px] bg-base-200 rounded-box mb-4">
         <li>
@@ -71,12 +73,14 @@ const Training: React.FC = () => {
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
             </svg>
           </a>
         </li>
@@ -87,12 +91,14 @@ const Training: React.FC = () => {
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </a>
         </li>
@@ -103,22 +109,31 @@ const Training: React.FC = () => {
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
             </svg>
           </a>
         </li>
       </ul>
-  
-      <h1 className="text-4xl font-bold mb-4">{currentCategory === "legPush" ? "Leg Push" : "Leg Pull"}</h1>
+
+      <h1 className="text-4xl font-bold mb-4">
+        {currentCategory === "legPush" ? "Leg Push" : "Leg Pull"}
+      </h1>
       <div className="bg-black space-y-5 w-full max-w-4xl rounded-md pt-4">
         {currentExercises.map((exercise, index) => (
-          <div key={index} className="flex justify-center items-center border-b pb-4">
-            <h2 className="font-neue font-bold text-white text-5xl w-1/3">{exercise.name}</h2>
+          <div
+            key={index}
+            className="flex justify-center items-center border-b pb-4"
+          >
+            <h2 className="font-neue font-bold text-white text-5xl w-1/3">
+              {exercise.name}
+            </h2>
             <div className="flex-1 ml-4">
               <p className="font-bold text-white">Sets:</p>
               <ul>

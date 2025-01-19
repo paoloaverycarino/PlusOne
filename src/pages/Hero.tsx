@@ -1,74 +1,53 @@
-// src/pages/Hero.tsx
 import React, { useState, useEffect } from "react";
 import LoginAlert from "../components/LoginAlert";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext"; // Import the context
 import Timer from "../components/Timer";
 
-
+// Define a type for the user data
+interface User {
+  id: string;
+  username: string;
+  password: string;
+}
 
 const Hero: React.FC = () => {
   const [username, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
-  const [storedUser1, setStoredUser1] = useState({
-    username: "",
-    password: "",
-  });
-  const [storedUser2, setStoredUser2] = useState({
-    username: "",
-    password: "",
-  });
+  const [users, setUsers] = useState<User[]>([]); // Explicitly type the users state
   const [showAlert, setShowAlert] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const { setUsername } = useUser(); // Access setUsername from context
   const navigate = useNavigate();
 
-  const getUserLogin = async () => {
-    const user1Ref = doc(db, "counters", "user1");
-    const user1Snap = await getDoc(user1Ref);
-    if (user1Snap.exists()) {
-      const user1Data = user1Snap.data();
-      setStoredUser1({
-        username: user1Data.username,
-        password: user1Data.password,
-      });
-    } else {
-      console.log("No data found for user1");
-    }
-
-    const user2Ref = doc(db, "counters", "user2");
-    const user2Snap = await getDoc(user2Ref);
-    if (user2Snap.exists()) {
-      const user2Data = user2Snap.data();
-      setStoredUser2({
-        username: user2Data.username,
-        password: user2Data.password,
-      });
-    } else {
-      console.log("No data found for user2");
+  const getUsers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "counters"));
+      const userData: User[] = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<User, "id">), // Cast the data to match the User type
+      }));
+      setUsers(userData); // This will now work correctly
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
-    getUserLogin();
+    getUsers();
   }, []);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (
-      username === storedUser1.username &&
-      password === storedUser1.password
-    ) {
-      setUsername("user1");
-      navigate("/user");
-    } else if (
-      username === storedUser2.username &&
-      password === storedUser2.password
-    ) {
-      setUsername("user2"); // Update the context with the logged-in user's username
+    const matchedUser = users.find(
+      (user) => user.username === username && user.password === password
+    );
+
+    if (matchedUser) {
+      setUsername(matchedUser.id); // Update the context with the logged-in user's ID or username
       navigate("/user");
     } else {
       setShowAlert(true);
@@ -79,9 +58,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-
     <div className="bg-black">
-      
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-row items-center justify-center gap-2">
           <div className="flex flex-col items-center space-y-4">
@@ -135,7 +112,6 @@ const Hero: React.FC = () => {
             >
               <LoginAlert />
             </div>
-
           </div>
         </div>
       </div>

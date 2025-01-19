@@ -20,7 +20,7 @@ function UploadToday() {
         .toString()
         .padStart(2, "0")}-${today.getFullYear()}`;
 
-    console.log("Formatted Date:", formattedDate);
+      console.log("Formatted Date:", formattedDate);
 
       const dailyLoginRef = doc(
         db,
